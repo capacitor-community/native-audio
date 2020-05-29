@@ -2,24 +2,27 @@ name: Test and Build Plugin
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [master, develop]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: borales/actions-yarn@v2.0.0
-      with:
-        cmd: install
+      - uses: actions/checkout@v2
 
-    - uses: borales/actions-yarn@v2.0.0
-      with:
-        cmd: yarn test
+      - name: Install yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
 
-    - uses: borales/actions-yarn@v2.0.0
-      with:
-        cmd: yarn build
+      - name: Install deps
+        run: yarn install
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Run build
+        run: yarn build
