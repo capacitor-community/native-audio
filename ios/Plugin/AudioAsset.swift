@@ -20,12 +20,13 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
     let FADE_DELAY: Float = 0.08
     
     init(path: String!, withChannels channels: NSNumber!, withVolume volume: NSNumber!, withFadeDelay delay: NSNumber!) {
+        super.init()
         
-        self.channels = NSMutableArray()
+        self.channels = NSMutableArray.init(capacity: channels as! Int)
         
         let pathUrl: NSURL! = NSURL.fileURL(withPath: path) as NSURL
         
-        for _ in 0..<self.channels.count {
+        for _ in 0..<channels.intValue {
             do {
                 let player: AVAudioPlayer! = try AVAudioPlayer(contentsOf: pathUrl as URL)
                 

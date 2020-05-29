@@ -1,4 +1,4 @@
-package com.getcapacitor.audio;
+package com.getcapacitor.audio.community;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -16,17 +16,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-import static com.getcapacitor.audio.Constant.ASSET_ID;
-import static com.getcapacitor.audio.Constant.ASSET_PATH;
-import static com.getcapacitor.audio.Constant.AUDIO_CHANNEL_NUM;
-import static com.getcapacitor.audio.Constant.ERROR_ASSET_NOT_LOADED;
-import static com.getcapacitor.audio.Constant.ERROR_ASSET_PATH_MISSING;
-import static com.getcapacitor.audio.Constant.ERROR_AUDIO_ASSET_MISSING;
-import static com.getcapacitor.audio.Constant.ERROR_AUDIO_EXISTS;
-import static com.getcapacitor.audio.Constant.ERROR_AUDIO_ID_MISSING;
-import static com.getcapacitor.audio.Constant.LOOP;
-import static com.getcapacitor.audio.Constant.OPT_FADE_MUSIC;
-import static com.getcapacitor.audio.Constant.VOLUME;
+import static com.getcapacitor.audio.community.Constant.ASSET_ID;
+import static com.getcapacitor.audio.community.Constant.ASSET_PATH;
+import static com.getcapacitor.audio.community.Constant.AUDIO_CHANNEL_NUM;
+import static com.getcapacitor.audio.community.Constant.ERROR_ASSET_NOT_LOADED;
+import static com.getcapacitor.audio.community.Constant.ERROR_ASSET_PATH_MISSING;
+import static com.getcapacitor.audio.community.Constant.ERROR_AUDIO_ASSET_MISSING;
+import static com.getcapacitor.audio.community.Constant.ERROR_AUDIO_EXISTS;
+import static com.getcapacitor.audio.community.Constant.ERROR_AUDIO_ID_MISSING;
+import static com.getcapacitor.audio.community.Constant.LOOP;
+import static com.getcapacitor.audio.community.Constant.OPT_FADE_MUSIC;
+import static com.getcapacitor.audio.community.Constant.VOLUME;
 
 @NativePlugin()
 public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChangeListener {

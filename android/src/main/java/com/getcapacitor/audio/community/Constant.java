@@ -1,4 +1,4 @@
-package com.getcapacitor.audio;
+package com.getcapacitor.audio.community;
 
 public class Constant {
     public static final String ERROR_AUDIO_ID_MISSING = "Audio Id is missing";

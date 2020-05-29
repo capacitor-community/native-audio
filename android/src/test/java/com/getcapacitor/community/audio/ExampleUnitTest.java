@@ -1,4 +1,4 @@
-package com.getcapacitor;
+package com.getcapacitor.community.audio;
 
 import org.junit.Test;
 
