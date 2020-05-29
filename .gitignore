@@ -29,8 +29,6 @@ contents.xcworkspacedata
 .stencil/
 android-template/.gradle/
 android-template/app/app.iml
-*.js
-*.json
 /site/.env
 /site/.firebase
 .gradle/
