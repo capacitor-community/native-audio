@@ -16,7 +16,7 @@ export interface NativeAudioPlugin {
 }
 
 export interface ConfigureOptions {
-  fade?: number;
+  fade?: boolean;
 }
 
 export interface PreloadSimpleOptions {
