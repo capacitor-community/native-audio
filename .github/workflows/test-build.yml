@@ -2,7 +2,7 @@ name: Test and Build Plugin
 
 on:
   push:
-    branches: [ master, develop, workflow-pr ]
+    branches: [ master, develop ]
   pull_request:
     branches: [ master ]
 
@@ -18,8 +18,8 @@ jobs:
 
     - uses: borales/actions-yarn@v2.0.0
       with:
-        cmd: test
+        cmd: yarn test
 
     - uses: borales/actions-yarn@v2.0.0
       with:
-        cmd: build
+        cmd: yarn build
