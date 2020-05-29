@@ -1,5 +1,5 @@
 import { WebPlugin } from '@capacitor/core';
-import { NativeAudioPlugin } from './definitions';
+import { NativeAudioPlugin, ConfigureOptions, PreloadSimpleOptions, PreloadComplexOptions } from './definitions';
 
 export class NativeAudioWeb extends WebPlugin implements NativeAudioPlugin {
   constructor() {
@@ -8,28 +8,36 @@ export class NativeAudioWeb extends WebPlugin implements NativeAudioPlugin {
       platforms: ['web']
     });
   }
-  configure(options: import("./definitions").ConfigureOptions): Promise<void> {
+  configure(options: ConfigureOptions): Promise<void> {
+    console.log(options);
     throw new Error("Method not implemented.");
   }
-  preloadSimple(options: import("./definitions").PreloadSimpleOptions): Promise<void> {
+  preloadSimple(options: PreloadSimpleOptions): Promise<void> {
+    console.log(options);
     throw new Error("Method not implemented.");
   }
-  preloadComplex(options: import("./definitions").PreloadComplexOptions): Promise<void> {
+  preloadComplex(options: PreloadComplexOptions): Promise<void> {
+    console.log(options);
     throw new Error("Method not implemented.");
   }
   play(options: { assetId: string; }): Promise<void> {
+    console.log(options);
     throw new Error("Method not implemented.");
   }
   loop(options: { assetId: string; }): Promise<void> {
+    console.log(options);
     throw new Error("Method not implemented.");
   }
   stop(options: { assetId: string; }): Promise<void> {
+    console.log(options);
     throw new Error("Method not implemented.");
   }
   unload(options: { assetId: string; }): Promise<void> {
+    console.log(options);
     throw new Error("Method not implemented.");
   }
   setVolumeForComplex(options: { assetId: string; }): Promise<void> {
+    console.log(options);
     throw new Error("Method not implemented.");
   }
 }

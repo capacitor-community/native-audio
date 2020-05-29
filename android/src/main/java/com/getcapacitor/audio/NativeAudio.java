@@ -130,8 +130,6 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
 
     @PluginMethod()
     public void play(final PluginCall call) {
-        initSoundPool();
-
         getBridge().getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -142,14 +140,55 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
 
     @PluginMethod()
     public void loop(final PluginCall call) {
-        initSoundPool();
-
         getBridge().getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 playOrLoop("loop", call);
             }
         });
+    }
+
+    @PluginMethod()
+    public void pause(PluginCall call) {
+        try {
+            initSoundPool();
+            String audioId = call.getString(ASSET_ID);
+
+            if (audioAssetList.containsKey(audioId)) {
+                AudioAsset asset = audioAssetList.get(audioId);
+                if (asset != null) {
+                    boolean wasPlaying = asset.pause();
+
+                    if (wasPlaying) {
+                        resumeList.add(asset);
+                    }
+                }
+            } else {
+                call.error(ERROR_ASSET_NOT_LOADED + " - " + audioId);
+            }
+        } catch (Exception ex) {
+            call.error(ex.getMessage());
+        }
+    }
+
+    @PluginMethod()
+    public void resume(PluginCall call) {
+        try {
+            initSoundPool();
+            String audioId = call.getString(ASSET_ID);
+
+            if (audioAssetList.containsKey(audioId)) {
+                AudioAsset asset = audioAssetList.get(audioId);
+                if (asset != null) {
+                    asset.resume();
+                    resumeList.add(asset);
+                }
+            } else {
+                call.error(ERROR_ASSET_NOT_LOADED + " - " + audioId);
+            }
+        } catch (Exception ex) {
+            call.error(ex.getMessage());
+        }
     }
 
     @PluginMethod()
@@ -211,7 +250,7 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
     }
 
     @PluginMethod()
-    public void setVolumeForComplex(PluginCall call) {
+    public void setVolume(PluginCall call) {
         try {
             initSoundPool();
 
@@ -232,7 +271,6 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
     }
 
     private void preloadAsset(PluginCall call) {
-        JSObject callback = new JSObject();
         double volume = 1.0;
         int audioChannelNum = 1;
 

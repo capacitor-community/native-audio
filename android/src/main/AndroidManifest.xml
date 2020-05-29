@@ -1,5 +1,5 @@
 
   <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.getcapacitor.native.audio.nativeaudio">
+      package="com.getcapacitor.audio.nativeaudio">
   </manifest>
   
