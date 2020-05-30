@@ -12,19 +12,8 @@
     <list default="true" id="ca5ad7fe-d641-45b1-b74d-82b0649c2df7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/native-audio-android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/native-audio-android.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/getcapacitor/audio/AudioAsset.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/getcapacitor/audio/community/AudioAsset.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/getcapacitor/audio/AudioDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/getcapacitor/audio/community/AudioDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/getcapacitor/audio/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/getcapacitor/audio/community/Constant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/getcapacitor/audio/NativeAudio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/getcapacitor/audio/community/NativeAudio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/getcapacitor/ExampleUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/getcapacitor/community/audio/ExampleUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/Plugin.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Plugin.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/Plugin.xcworkspace/xcuserdata/shankz.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Plugin.xcworkspace/xcuserdata/shankz.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/Plugin/AudioAsset.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Plugin/AudioAsset.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/Plugin/Plugin.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Plugin/Plugin.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -106,7 +95,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

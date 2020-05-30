@@ -1,5 +1,5 @@
 {
-  "name": "native-audio",
+  "name": "@capacitor-community/native-audio",
   "version": "0.0.1",
   "description": "Capacitor Native Audio",
   "main": "dist/esm/index.js",
@@ -43,9 +43,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:capacitor-community:native-audio.git"
+    "url": "https://github.com/capacitor-community/native-audio"
   },
   "bugs": {
-    "url": "git@github.com:capacitor-community:native-audio.git/issues"
+    "url": "https://github.com/capacitor-community/native-audio/issues"
   }
 }
