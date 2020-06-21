@@ -12,7 +12,7 @@ export interface NativeAudioPlugin {
   loop(options: { assetId: string; }): Promise<void>;
   stop(options: { assetId: string; }): Promise<void>;
   unload(options: { assetId: string; }): Promise<void>;
-  setVolumeForComplex(options: { assetId: string; volume: number; }): Promise<void>;
+  setVolume(options: { assetId: string; volume: number; }): Promise<void>;
 }
 
 export interface ConfigureOptions {
