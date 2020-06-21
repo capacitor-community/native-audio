@@ -1,5 +1,6 @@
-package com.getcapacitor.audio.community;
+package com.getcapacitor.community.audio;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -16,22 +17,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-import static com.getcapacitor.audio.community.Constant.ASSET_ID;
-import static com.getcapacitor.audio.community.Constant.ASSET_PATH;
-import static com.getcapacitor.audio.community.Constant.AUDIO_CHANNEL_NUM;
-import static com.getcapacitor.audio.community.Constant.ERROR_ASSET_NOT_LOADED;
-import static com.getcapacitor.audio.community.Constant.ERROR_ASSET_PATH_MISSING;
-import static com.getcapacitor.audio.community.Constant.ERROR_AUDIO_ASSET_MISSING;
-import static com.getcapacitor.audio.community.Constant.ERROR_AUDIO_EXISTS;
-import static com.getcapacitor.audio.community.Constant.ERROR_AUDIO_ID_MISSING;
-import static com.getcapacitor.audio.community.Constant.LOOP;
-import static com.getcapacitor.audio.community.Constant.OPT_FADE_MUSIC;
-import static com.getcapacitor.audio.community.Constant.VOLUME;
+import static com.getcapacitor.community.audio.Constant.ASSET_ID;
+import static com.getcapacitor.community.audio.Constant.ASSET_PATH;
+import static com.getcapacitor.community.audio.Constant.AUDIO_CHANNEL_NUM;
+import static com.getcapacitor.community.audio.Constant.ERROR_ASSET_NOT_LOADED;
+import static com.getcapacitor.community.audio.Constant.ERROR_ASSET_PATH_MISSING;
+import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_ASSET_MISSING;
+import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_EXISTS;
+import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_ID_MISSING;
+import static com.getcapacitor.community.audio.Constant.LOOP;
+import static com.getcapacitor.community.audio.Constant.OPT_FADE_MUSIC;
+import static com.getcapacitor.community.audio.Constant.VOLUME;
 
-@NativePlugin()
+@NativePlugin(
+    permissions = {
+        Manifest.permission.MODIFY_AUDIO_SETTINGS,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_PHONE_STATE
+    }
+)
 public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChangeListener {
 
-    public static final String TAG = "AudioFile";
+    public static final String TAG = "NativeAudio";
 
     private static HashMap<String, AudioAsset> audioAssetList;
     private static ArrayList<AudioAsset> resumeList;
