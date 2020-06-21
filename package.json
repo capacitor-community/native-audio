@@ -1,6 +1,6 @@
 {
   "name": "@capacitor-community/native-audio",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Capacitor Native Audio",
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -17,10 +17,15 @@
     "@capacitor/core": "latest"
   },
   "devDependencies": {
-    "rimraf": "^3.0.0",
-    "typescript": "^3.2.4",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.5",
     "@capacitor/ios": "latest",
     "@capacitor/android": "latest"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "files": [
     "dist/",
