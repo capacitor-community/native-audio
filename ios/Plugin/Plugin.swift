@@ -3,6 +3,10 @@ import Foundation
 import Capacitor
 import CoreAudio
 
+enum MyError: Error {
+    case runtimeError(String)
+}
+
 /**
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitor.ionicframework.com/docs/plugins/ios
@@ -89,24 +93,10 @@ public class NativeAudio: CAPPlugin {
     @objc func stop(_ call: CAPPluginCall) {
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         
-        if self.audioList.count > 0 {
-            let asset = self.audioList[audioId]
-            
-            if asset != nil {
-                if asset is AudioAsset {
-                    let audioAsset = asset as? AudioAsset
-                    
-                    if self.fadeMusic {
-                        audioAsset?.playWithFade()
-                    } else {
-                        audioAsset?.stop()
-                    }
-                    
-                    call.success()
-                }
-            } else {
-                call.error(Constant.ErrorAssetNotFound)
-            }
+        do {
+            try stopAudio(audioId: audioId)
+        } catch {
+            call.error(Constant.ErrorAssetNotFound)
         }
     }
     
@@ -129,10 +119,29 @@ public class NativeAudio: CAPPlugin {
         }
     }
     
-    @objc func unload(_ call: CAPPluginCall) {}
+    @objc func unload(_ call: CAPPluginCall) {
+        let audioId = call.getString(Constant.AssetIdKey) ?? ""
+        
+        do {
+            try stopAudio(audioId: audioId)
+        } catch {
+            call.error(Constant.ErrorAssetNotFound)
+        }
+        
+        let player : AVAudioPlayer! = self.audioList[audioId] as? AVAudioPlayer
+        if player != nil {
+            player.stop()
+        }
+    }
     
     @objc func setVoume(_ call: CAPPluginCall) {
+        let audioId = call.getString(Constant.AssetIdKey) ?? ""
+        let volume = call.getFloat(Constant.Volume) ?? 1.0
         
+        let player : AVAudioPlayer! = self.audioList[audioId] as? AVAudioPlayer
+        if player != nil {
+            player.setVolume(volume, fadeDuration: 1)
+        }
     }
     
     private func preloadAsset(_ call: CAPPluginCall, isComplex complex: Bool) {
@@ -187,6 +196,26 @@ public class NativeAudio: CAPPlugin {
                         call.error(Constant.ErrorAssetPath)
                     }
                 }
+            }
+        }
+    }
+    
+    private func stopAudio(audioId: String) throws {
+        if self.audioList.count > 0 {
+            let asset = self.audioList[audioId]
+            
+            if asset != nil {
+                if asset is AudioAsset {
+                    let audioAsset = asset as? AudioAsset
+                    
+                    if self.fadeMusic {
+                        audioAsset?.playWithFade()
+                    } else {
+                        audioAsset?.stop()
+                    }
+                }
+            } else {
+                throw MyError.runtimeError(Constant.ErrorAssetNotFound)
             }
         }
     }
