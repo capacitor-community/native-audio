@@ -152,11 +152,12 @@ NativeAudio.unload({
 });
 
 /**
- * This method will unload the audio file from the memory.
+ * This method will set the new volume for a audio file.
  * @param assetId - identifier of the asset
+ *        volume - numerical value of the volume between 0.1 - 1.0
  * @returns void
  */
-NativeAudio.setVolumeForComplex({
+NativeAudio.setVolume({
   assetId: 'inception_audio',
   volume: 0.4,
 });
