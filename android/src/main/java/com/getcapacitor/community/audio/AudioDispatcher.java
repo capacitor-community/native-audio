@@ -1,4 +1,4 @@
-package com.getcapacitor.audio.community;
+package com.getcapacitor.community.audio;
 
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
