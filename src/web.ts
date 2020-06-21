@@ -36,7 +36,7 @@ export class NativeAudioWeb extends WebPlugin implements NativeAudioPlugin {
     console.log(options);
     throw new Error("Method not implemented.");
   }
-  setVolumeForComplex(options: { assetId: string; }): Promise<void> {
+  setVolume(options: { assetId: string; }): Promise<void> {
     console.log(options);
     throw new Error("Method not implemented.");
   }
