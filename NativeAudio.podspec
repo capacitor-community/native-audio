@@ -1,6 +1,6 @@
 
   Pod::Spec.new do |s|
-    s.name = 'NativeAudio'
+    s.name = 'CapacitorCommunityNativeAudio'
     s.version = '0.0.1'
     s.summary = 'A native plugin for audio playback'
     s.license = 'MIT'
