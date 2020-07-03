@@ -15,14 +15,18 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
     var assetId: String = ""
     var initialVolume: NSNumber = 1.0
     var fadeDelay: NSNumber = 1.0
+    var owner: NativeAudio
     
     let FADE_STEP: Float = 0.05
     let FADE_DELAY: Float = 0.08
     
-    init(path: String!, withChannels channels: NSNumber!, withVolume volume: NSNumber!, withFadeDelay delay: NSNumber!) {
-        super.init()
-        
+    init(owner:NativeAudio, withAssetId assetId:String, withPath path: String!, withChannels channels: NSNumber!, withVolume volume: NSNumber!, withFadeDelay delay: NSNumber!) {
+
+        self.owner = owner
+        self.assetId = assetId
         self.channels = NSMutableArray.init(capacity: channels as! Int)
+        
+        super.init()
         
         let pathUrl: NSURL! = NSURL.fileURL(withPath: path) as NSURL
         
@@ -42,6 +46,26 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
         }
     }
     
+    func getCurrentTime() -> TimeInterval {
+        if channels.count != 1 {
+            return 0
+        }
+
+        let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
+
+        return player.currentTime
+    }
+    
+    func getDuration() -> TimeInterval {
+        if channels.count != 1 {
+            return 0
+        }
+
+        let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
+
+        return player.duration
+    }
+
     func play() {
         let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
         player.currentTime = 0
@@ -107,10 +131,11 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
     func unload() {
         self.stop()
         
-        for i in 0..<channels.count {
-            var player: AVAudioPlayer! = channels.object(at: i) as? AVAudioPlayer
-            player = nil
-        }
+//        for i in 0..<channels.count {
+//            var player: AVAudioPlayer! = channels.object(at: i) as? AVAudioPlayer
+//
+//            player = nil
+//        }
         
         channels = NSMutableArray()
     }
@@ -122,8 +147,11 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
         }
     }
     
-    func playerDidFinish(player: AVAudioPlayer!, successful flag: Bool) {
-        
+    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        NSLog("playerDidFinish")
+        self.owner.dispatchEvent(type:"complete", withData: [
+            "assetId": self.assetId
+        ])
     }
     
     func playerDecodeError(player: AVAudioPlayer!, error: NSError!) {

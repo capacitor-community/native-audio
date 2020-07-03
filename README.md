@@ -4,9 +4,9 @@ Capacitory community plugin for native audio engine.
 
 ## Maintainers
 
-| Maintainer | GitHub | Social | Sponsoring Company |
-| -----------| -------| -------| -------------------|
-| Priyank Patel | [priyankpat](https://github.com/priyankpat) | [N/A](https://twitter.com) | Ionic |
+| Maintainer    | GitHub                                      | Social                     | Sponsoring Company |
+| ------------- | ------------------------------------------- | -------------------------- | ------------------ |
+| Priyank Patel | [priyankpat](https://github.com/priyankpat) | [N/A](https://twitter.com) | Ionic              |
 
 Mainteinance Status: Actively Maintained
 
@@ -15,13 +15,13 @@ Mainteinance Status: Actively Maintained
 To use npm
 
 ```bash
-npm install @capacitor/firebase-crashlytics
+npm install @capacitor-community/native-audio
 ```
 
 To use yarn
 
 ```bash
-yarn add @capacitor/firebase-crashlytics
+yarn add @capacitor-community/native-audio
 ```
 
 Sync native files
@@ -38,16 +38,23 @@ On Android, register the plugin in your main activity:
 import com.getcapacitor.community.firebasecrashlytics.FirebaseCrashlytics;
 
 public class MainActivity extends BridgeActivity {
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     // Initializes the Bridge
-    this.init(savedInstanceState, new ArrayList<Class<? extends Plugin>>() {{
-      // Additional plugins you've installed go here
-      // Ex: add(TotallyAwesomePlugin.class);
-      add(FirebaseCrashlytics.class);
-    }});
+    this.init(
+        savedInstanceState,
+        new ArrayList<Class<? extends Plugin>>() {
+
+          {
+            // Additional plugins you've installed go here
+            // Ex: add(TotallyAwesomePlugin.class);
+            add(FirebaseCrashlytics.class);
+          }
+        }
+      );
   }
 }
 ```
@@ -58,22 +65,22 @@ No configuration required for this plugin.
 
 ## Supported methods
 
-| Name  | Android | iOS | Web
-| :---- | :--- | :--- | :--- |
-| configure | ✅ | ✅ | ❌ 
-| preloadSimple | ✅ | ✅ | ❌ 
-| preloadComplex | ✅ | ✅ | ❌ 
-| play | ✅ | ✅ | ❌ 
-| loop | ✅ | ✅ | ❌ 
-| stop | ✅ | ✅ | ❌ 
-| unload | ✅ | ✅ | ❌ 
-| setVolumeForComplex | ✅ | ✅ | ❌ 
+| Name                | Android | iOS | Web |
+| :------------------ | :------ | :-- | :-- |
+| configure           | ✅      | ✅  | ❌  |
+| preloadSimple       | ✅      | ✅  | ❌  |
+| preloadComplex      | ✅      | ✅  | ❌  |
+| play                | ✅      | ✅  | ❌  |
+| loop                | ✅      | ✅  | ❌  |
+| stop                | ✅      | ✅  | ❌  |
+| unload              | ✅      | ✅  | ❌  |
+| setVolumeForComplex | ✅      | ✅  | ❌  |
+| getDuration         | ❌      | ✅  | ❌  |
+| getCurrentTime      | ❌      | ✅  | ❌  |
 
 ## Usage
 
 ```typescript
-// Must import the package once to make sure the web support initializes
-import '@capacitor-community/http';
 
 import { Plugins } from '@capacitor/core';
 
@@ -101,10 +108,11 @@ NativeAudio.preloadSimple({
 
 /**
  * This method will load more optimized audio files for background into memory.
- * @param assetPath - relative path of the file or absolute url (http://)
+ * @param assetPath - relative path of the file or absolute url (file://)
  *        assetId - unique identifier of the file
  *        volume - numerical value of the volume between 0.1 - 1.0
  *        audioChannelNum - number of audio channels
+ *        isUrl - pass true if assetPath is a `file://` url
  * @returns void
  */
 NativeAudio.preloadComplex({
@@ -112,6 +120,7 @@ NativeAudio.preloadComplex({
   assetId: 'inception_audio',
   volume: 1.0,
   audioChannelNum: 1,
+  isUrl: false
 });
 
 /**
@@ -161,4 +170,26 @@ NativeAudio.setVolume({
   assetId: 'inception_audio',
   volume: 0.4,
 });
+
+/**
+ * this method will get the duration of an audio file.
+ * only works if channels == 1
+ */
+NativeAudio.getDuration({
+  assetId: 'inception_audio'
+})
+.then(result => {
+  console.log(result.duration);
+})
+
+/**
+ * this method will get the current time of a playing audio file.
+ * only works if channels == 1
+ */
+NativeAudio.getCurrentTime({
+  assetId: 'inception_audio'
+});
+.then(result => {
+  console.log(result.currentTime);
+})
 ```
