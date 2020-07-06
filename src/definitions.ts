@@ -1,3 +1,5 @@
+import { PluginListenerHandle } from "@capacitor/core";
+
 declare module "@capacitor/core" {
   interface PluginRegistry {
     NativeAudio: NativeAudioPlugin;
@@ -17,6 +19,11 @@ export interface NativeAudioPlugin {
     assetId: string;
   }): Promise<{ currentTime: number }>;
   getDuration(options: { assetId: string }): Promise<{ duration: number }>;
+
+  addListener(
+    eventName: "complete",
+    listenerFunc: (options: { assetId: string }) => void
+  ): PluginListenerHandle;
 }
 
 export interface ConfigureOptions {
