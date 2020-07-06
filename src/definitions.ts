@@ -40,4 +40,5 @@ export interface PreloadComplexOptions {
   assetId: string;
   volume?: number;
   audioChannelNum?: number;
+  isUrl?: boolean;
 }
