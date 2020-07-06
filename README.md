@@ -65,18 +65,18 @@ No configuration required for this plugin.
 
 ## Supported methods
 
-| Name                | Android | iOS | Web |
-| :------------------ | :------ | :-- | :-- |
-| configure           | ✅      | ✅  | ❌  |
-| preloadSimple       | ✅      | ✅  | ❌  |
-| preloadComplex      | ✅      | ✅  | ❌  |
-| play                | ✅      | ✅  | ❌  |
-| loop                | ✅      | ✅  | ❌  |
-| stop                | ✅      | ✅  | ❌  |
-| unload              | ✅      | ✅  | ❌  |
-| setVolumeForComplex | ✅      | ✅  | ❌  |
-| getDuration         | ❌      | ✅  | ❌  |
-| getCurrentTime      | ❌      | ✅  | ❌  |
+| Name           | Android | iOS | Web |
+| :------------- | :------ | :-- | :-- |
+| configure      | ✅      | ✅  | ❌  |
+| preloadSimple  | ✅      | ✅  | ❌  |
+| preloadComplex | ✅      | ✅  | ❌  |
+| play           | ✅      | ✅  | ❌  |
+| loop           | ✅      | ✅  | ❌  |
+| stop           | ✅      | ✅  | ❌  |
+| unload         | ✅      | ✅  | ❌  |
+| setVolume      | ✅      | ✅  | ❌  |
+| getDuration    | ❌      | ✅  | ❌  |
+| getCurrentTime | ❌      | ✅  | ❌  |
 
 ## Usage
 
