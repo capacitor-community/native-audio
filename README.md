@@ -1,27 +1,40 @@
-# Capacitor Native Audio Plugin
+<p align="center"><br><img src="https://user-images.githubusercontent.com/236501/85893648-1c92e880-b7a8-11ea-926d-95355b8175c7.png" width="128" height="128" /></p>
+<h3 align="center">Native Audio</h3>
+<p align="center"><strong><code>@capacitor-community/native-audio</code></strong></p>
+<p align="center">
+  Capacitor community plugin for native <a href="https://firebase.google.com/docs/crashlytics">Firebase Crashlytics</a>.
+</p>
 
-Capacitory community plugin for native audio engine.
+<p align="center">
+  <img src="https://img.shields.io/maintenance/yes/2020?style=flat-square" />
+  <a href="https://github.com/capacitor-community/native-audio/actions?query=workflow%3A%22Test+and+Build+Plugin%22"><img src="https://img.shields.io/github/workflow/status/capacitor-community/native-audio/Test%20and%20Build%20Plugin?style=flat-square" /></a>
+  <a href="https://www.npmjs.com/package/@capacitor-community/native-audio"><img src="https://img.shields.io/npm/l/@capacitor-community/native-audio?style=flat-square" /></a>
+<br>
+  <a href="https://www.npmjs.com/package/@capacitor-community/native-audio"><img src="https://img.shields.io/npm/dw/@capacitor-community/native-audio?style=flat-square" /></a>
+  <a href="https://www.npmjs.com/package/@capacitor-community/native-audio"><img src="https://img.shields.io/npm/v/@capacitor-community/native-audio?style=flat-square" /></a>
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+<a href="#contributors-"><img src="https://img.shields.io/badge/all%20contributors-1-orange?style=flat-square" /></a>
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+</p>
 
 ## Maintainers
 
-| Maintainer | GitHub | Social | Sponsoring Company |
-| -----------| -------| -------| -------------------|
-| Priyank Patel | [priyankpat](https://github.com/priyankpat) | [N/A](https://twitter.com) | Ionic |
-
-Mainteinance Status: Actively Maintained
+| Maintainer    | GitHub                                      | Social                                           | Sponsoring Company |
+| ------------- | ------------------------------------------- | ------------------------------------------------ | ------------------ |
+| Priyank Patel | [priyankpat](https://github.com/priyankpat) | [@priyankpat\_](https://twitter.com/priyankpat_) | Ionic              |
 
 ## Installation
 
 To use npm
 
 ```bash
-npm install @capacitor/firebase-crashlytics
+npm install @capacitor/native-audio
 ```
 
 To use yarn
 
 ```bash
-yarn add @capacitor/firebase-crashlytics
+yarn add @capacitor/native-audio
 ```
 
 Sync native files
@@ -35,19 +48,26 @@ On iOS, no further steps are needed.
 On Android, register the plugin in your main activity:
 
 ```java
-import com.getcapacitor.community.firebasecrashlytics.FirebaseCrashlytics;
+import com.getcapacitor.community.audio.nativeaudio.NativeAudio;
 
 public class MainActivity extends BridgeActivity {
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     // Initializes the Bridge
-    this.init(savedInstanceState, new ArrayList<Class<? extends Plugin>>() {{
-      // Additional plugins you've installed go here
-      // Ex: add(TotallyAwesomePlugin.class);
-      add(FirebaseCrashlytics.class);
-    }});
+    this.init(
+        savedInstanceState,
+        new ArrayList<Class<? extends Plugin>>() {
+
+          {
+            // Additional plugins you've installed go here
+            // Ex: add(TotallyAwesomePlugin.class);
+            add(NativeAudio.class);
+          }
+        }
+      );
   }
 }
 ```
@@ -58,24 +78,24 @@ No configuration required for this plugin.
 
 ## Supported methods
 
-| Name  | Android | iOS | Web
-| :---- | :--- | :--- | :--- |
-| configure | ✅ | ✅ | ❌ 
-| preloadSimple | ✅ | ✅ | ❌ 
-| preloadComplex | ✅ | ✅ | ❌ 
-| play | ✅ | ✅ | ❌ 
-| loop | ✅ | ✅ | ❌ 
-| stop | ✅ | ✅ | ❌ 
-| unload | ✅ | ✅ | ❌ 
-| setVolumeForComplex | ✅ | ✅ | ❌ 
+| Name                | Android | iOS | Web |
+| :------------------ | :------ | :-- | :-- |
+| configure           | ✅      | ✅  | ❌  |
+| preloadSimple       | ✅      | ✅  | ❌  |
+| preloadComplex      | ✅      | ✅  | ❌  |
+| play                | ✅      | ✅  | ❌  |
+| loop                | ✅      | ✅  | ❌  |
+| stop                | ✅      | ✅  | ❌  |
+| unload              | ✅      | ✅  | ❌  |
+| setVolumeForComplex | ✅      | ✅  | ❌  |
 
 ## Usage
 
 ```typescript
 // Must import the package once to make sure the web support initializes
-import '@capacitor-community/http';
+import "@capacitor-community/http";
 
-import { Plugins } from '@capacitor/core';
+import { Plugins } from "@capacitor/core";
 
 const { NativeAudio } = Plugins;
 
@@ -85,7 +105,7 @@ const { NativeAudio } = Plugins;
  * @returns void
  */
 NativeAudio.configure({
-  fade: '',
+  fade: "",
 });
 
 /**
@@ -95,8 +115,8 @@ NativeAudio.configure({
  * @returns void
  */
 NativeAudio.preloadSimple({
-  assetPath: 'audio/chime.mp3',
-  assetId: 'chime_audio',
+  assetPath: "audio/chime.mp3",
+  assetId: "chime_audio",
 });
 
 /**
@@ -108,8 +128,8 @@ NativeAudio.preloadSimple({
  * @returns void
  */
 NativeAudio.preloadComplex({
-  assetPath: 'audio/inception.mp3',
-  assetId: 'inception_audio',
+  assetPath: "audio/inception.mp3",
+  assetId: "inception_audio",
   volume: 1.0,
   audioChannelNum: 1,
 });
@@ -120,7 +140,7 @@ NativeAudio.preloadComplex({
  * @returns void
  */
 NativeAudio.play({
-  assetId: 'chime_audio',
+  assetId: "chime_audio",
 });
 
 /**
@@ -129,9 +149,8 @@ NativeAudio.play({
  * @returns void
  */
 NativeAudio.loop({
-  assetId: 'chime_audio',
+  assetId: "chime_audio",
 });
-
 
 /**
  * This method will stop the audio file if it's currently playing.
@@ -139,7 +158,7 @@ NativeAudio.loop({
  * @returns void
  */
 NativeAudio.stop({
-  assetId: 'chime_audio',
+  assetId: "chime_audio",
 });
 
 /**
@@ -148,7 +167,7 @@ NativeAudio.stop({
  * @returns void
  */
 NativeAudio.unload({
-  assetId: 'chime_audio',
+  assetId: "chime_audio",
 });
 
 /**
@@ -158,7 +177,7 @@ NativeAudio.unload({
  * @returns void
  */
 NativeAudio.setVolume({
-  assetId: 'inception_audio',
+  assetId: "inception_audio",
   volume: 0.4,
 });
 ```
