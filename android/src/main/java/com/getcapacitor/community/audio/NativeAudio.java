@@ -1,374 +1,471 @@
 package com.getcapacitor.community.audio;
 
+import static com.getcapacitor.community.audio.Constant.ASSET_ID;
+import static com.getcapacitor.community.audio.Constant.ASSET_PATH;
+import static com.getcapacitor.community.audio.Constant.AUDIO_CHANNEL_NUM;
+import static com.getcapacitor.community.audio.Constant.LOOP;
+import static com.getcapacitor.community.audio.Constant.VOLUME;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.util.Log;
-
 import com.getcapacitor.JSObject;
 import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-import static com.getcapacitor.community.audio.Constant.ASSET_ID;
-import static com.getcapacitor.community.audio.Constant.ASSET_PATH;
-import static com.getcapacitor.community.audio.Constant.AUDIO_CHANNEL_NUM;
-import static com.getcapacitor.community.audio.Constant.ERROR_ASSET_NOT_LOADED;
-import static com.getcapacitor.community.audio.Constant.ERROR_ASSET_PATH_MISSING;
-import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_ASSET_MISSING;
-import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_EXISTS;
-import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_ID_MISSING;
-import static com.getcapacitor.community.audio.Constant.LOOP;
-import static com.getcapacitor.community.audio.Constant.OPT_FADE_MUSIC;
-import static com.getcapacitor.community.audio.Constant.VOLUME;
-
 @NativePlugin(
-    permissions = {
-        Manifest.permission.MODIFY_AUDIO_SETTINGS,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.READ_PHONE_STATE
-    }
+  permissions = {
+    Manifest.permission.MODIFY_AUDIO_SETTINGS,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    Manifest.permission.READ_PHONE_STATE,
+  }
 )
-public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChangeListener {
+public class NativeAudio
+  extends Plugin
+  implements AudioManager.OnAudioFocusChangeListener {
+  public static final String TAG = "NativeAudio";
 
-    public static final String TAG = "NativeAudio";
+  private static HashMap<String, AudioAsset> audioAssetList;
+  private static ArrayList<AudioAsset> resumeList;
 
-    private static HashMap<String, AudioAsset> audioAssetList;
-    private static ArrayList<AudioAsset> resumeList;
-    private boolean fadeMusic = false;
+  @Override
+  public void load() {
+    super.load();
 
-    @Override
-    public void load() {
-        super.load();
+    AudioManager audioManager = (AudioManager) getBridge()
+      .getActivity()
+      .getSystemService(Context.AUDIO_SERVICE);
 
-        AudioManager audioManager = (AudioManager) getBridge().getActivity().getSystemService(Context.AUDIO_SERVICE);
+    if (audioManager != null) {
+      int result = audioManager.requestAudioFocus(
+        this,
+        AudioManager.STREAM_MUSIC,
+        AudioManager.AUDIOFOCUS_GAIN
+      );
 
-        if (audioManager != null) {
-            int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+      initSoundPool();
+    }
+  }
+
+  @Override
+  public void onAudioFocusChange(int focusChange) {
+    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {} else if (
+      focusChange == AudioManager.AUDIOFOCUS_GAIN
+    ) {} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {}
+  }
+
+  @Override
+  protected void handleOnPause() {
+    super.handleOnPause();
+
+    try {
+      if (audioAssetList != null) {
+        for (HashMap.Entry<String, AudioAsset> entry : audioAssetList.entrySet()) {
+          AudioAsset audio = entry.getValue();
+
+          if (audio != null) {
+            boolean wasPlaying = audio.pause();
+
+            if (wasPlaying) {
+              resumeList.add(audio);
+            }
+          }
         }
+      }
+    } catch (Exception ex) {
+      Log.d(
+        TAG,
+        "Exception caught while listening for handleOnPause: " +
+        ex.getLocalizedMessage()
+      );
     }
+  }
 
-    @Override
-    public void onAudioFocusChange(int focusChange) {
-        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+  @Override
+  protected void handleOnResume() {
+    super.handleOnResume();
 
-        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+    try {
+      if (resumeList != null) {
+        while (!resumeList.isEmpty()) {
+          AudioAsset audio = resumeList.remove(0);
 
-        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-
+          if (audio != null) {
+            audio.resume();
+          }
         }
+      }
+    } catch (Exception ex) {
+      Log.d(
+        TAG,
+        "Exception caught while listening for handleOnResume: " +
+        ex.getLocalizedMessage()
+      );
+    }
+  }
+
+  /**
+   * This method will load short duration audio file into memory.
+   * @param call
+   */
+  @PluginMethod
+  public void preloadSimple(final PluginCall call) {
+    if (call.hasOption(ASSET_PATH)) {
+      call.error(ASSET_PATH + " property is missing");
+      return;
     }
 
-    @Override
-    protected void handleOnPause() {
-        super.handleOnPause();
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
+    }
 
-        try {
-            if (audioAssetList != null) {
-                for (HashMap.Entry<String, AudioAsset> entry : audioAssetList.entrySet()) {
-                    AudioAsset audio = entry.getValue();
+    new Thread(
+      new Runnable() {
 
-                    if (audio != null) {
-                        boolean wasPlaying = audio.pause();
-
-                        if (wasPlaying) {
-                            resumeList.add(audio);
-                        }
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Log.d(TAG, "Exception caught while listening for handleOnPause: " + ex.getLocalizedMessage());
+        @Override
+        public void run() {
+          preloadAsset(call);
         }
+      }
+    )
+    .start();
+  }
+
+  /**
+   * This method will load more optimized audio files for background into memory.
+   * @param call
+   */
+  @PluginMethod
+  public void preloadComplex(final PluginCall call) {
+    if (call.hasOption(ASSET_PATH)) {
+      call.error(ASSET_PATH + " property is missing");
+      return;
     }
 
-    @Override
-    protected void handleOnResume() {
-        super.handleOnResume();
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
+    }
 
-        try {
-            if (resumeList != null) {
-                while (!resumeList.isEmpty()) {
-                    AudioAsset audio = resumeList.remove(0);
+    new Thread(
+      new Runnable() {
 
-                    if (audio != null) {
-                        audio.resume();
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Log.d(TAG, "Exception caught while listening for handleOnResume: " + ex.getLocalizedMessage());
+        @Override
+        public void run() {
+          preloadAsset(call);
         }
+      }
+    )
+    .start();
+  }
+
+  /**
+   * This method will play the loaded audio file if present in the memory.
+   * @param call
+   */
+  @PluginMethod
+  public void play(final PluginCall call) {
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
     }
 
-    @PluginMethod()
-    public void configure(PluginCall call) {
-        initSoundPool();
+    getBridge()
+      .getActivity()
+      .runOnUiThread(
+        new Runnable() {
 
-        if (call.hasOption(OPT_FADE_MUSIC)) this.fadeMusic = call.getBoolean(OPT_FADE_MUSIC);
-    }
-
-    @PluginMethod()
-    public void preloadSimple(final PluginCall call) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                preloadAsset(call);
-            }
-        }).start();
-    }
-
-    @PluginMethod()
-    public void preloadComplex(final PluginCall call) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                preloadAsset(call);
-            }
-        }).start();
-    }
-
-    @PluginMethod()
-    public void play(final PluginCall call) {
-        getBridge().getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                playOrLoop("play", call);
-            }
-        });
-    }
-
-    @PluginMethod()
-    public void loop(final PluginCall call) {
-        getBridge().getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                playOrLoop("loop", call);
-            }
-        });
-    }
-
-    @PluginMethod()
-    public void pause(PluginCall call) {
-        try {
-            initSoundPool();
-            String audioId = call.getString(ASSET_ID);
-
-            if (audioAssetList.containsKey(audioId)) {
-                AudioAsset asset = audioAssetList.get(audioId);
-                if (asset != null) {
-                    boolean wasPlaying = asset.pause();
-
-                    if (wasPlaying) {
-                        resumeList.add(asset);
-                    }
-                }
-            } else {
-                call.error(ERROR_ASSET_NOT_LOADED + " - " + audioId);
-            }
-        } catch (Exception ex) {
-            call.error(ex.getMessage());
+          @Override
+          public void run() {
+            playOrLoop("play", call);
+          }
         }
+      );
+  }
+
+  /**
+   * This method will loop the audio file for playback.
+   * @param call
+   */
+  @PluginMethod
+  public void loop(final PluginCall call) {
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
     }
 
-    @PluginMethod()
-    public void resume(PluginCall call) {
-        try {
-            initSoundPool();
-            String audioId = call.getString(ASSET_ID);
+    getBridge()
+      .getActivity()
+      .runOnUiThread(
+        new Runnable() {
 
-            if (audioAssetList.containsKey(audioId)) {
-                AudioAsset asset = audioAssetList.get(audioId);
-                if (asset != null) {
-                    asset.resume();
-                    resumeList.add(asset);
-                }
-            } else {
-                call.error(ERROR_ASSET_NOT_LOADED + " - " + audioId);
+          @Override
+          public void run() {
+            playOrLoop("loop", call);
+          }
+        }
+      );
+  }
+
+  /**
+   * This method will pause the audio file during playback.
+   * @param call
+   */
+  @PluginMethod
+  public void pause(PluginCall call) {
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
+    }
+
+    try {
+      initSoundPool();
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!audioAssetList.containsKey(audioId)) {
+        call.error(audioId + " asset is not loaded");
+        return;
+      }
+
+      AudioAsset asset = audioAssetList.get(audioId);
+      if (asset != null) {
+        boolean wasPlaying = asset.pause();
+
+        if (wasPlaying) {
+          resumeList.add(asset);
+        }
+      }
+      call.success();
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  /**
+   * This method will resume the audio file during playback.
+   * @param call
+   */
+  @PluginMethod
+  public void resume(PluginCall call) {
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
+    }
+
+    try {
+      initSoundPool();
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!audioAssetList.containsKey(audioId)) {
+        call.error(audioId + " asset is not loaded");
+        return;
+      }
+
+      AudioAsset asset = audioAssetList.get(audioId);
+      if (asset != null) {
+        asset.resume();
+        resumeList.add(asset);
+      }
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  /**
+   * This method will stop the audio file during playback.
+   * @param call
+   */
+  @PluginMethod
+  public void stop(PluginCall call) {
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
+    }
+
+    try {
+      initSoundPool();
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!audioAssetList.containsKey(audioId)) {
+        call.error(audioId + " asset is not loaded");
+        return;
+      }
+
+      AudioAsset asset = audioAssetList.get(audioId);
+      if (asset != null) {
+        asset.stop();
+      }
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  /**
+   * This method will stop and unload the audio file.
+   * @param call
+   */
+  @PluginMethod
+  public void unload(PluginCall call) {
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
+    }
+
+    try {
+      initSoundPool();
+
+      new JSObject();
+      JSObject status;
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!audioAssetList.containsKey(audioId)) {
+        call.error(audioId + " asset is not loaded");
+        return;
+      }
+
+      AudioAsset asset = audioAssetList.get(audioId);
+      if (asset != null) {
+        asset.stop();
+        asset.unload();
+        audioAssetList.remove(audioId);
+      }
+      call.success();
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  /**
+   * This method will adjust volume to specified value
+   * @param call
+   */
+  @PluginMethod
+  public void setVolume(PluginCall call) {
+    if (call.hasOption(ASSET_ID)) {
+      call.error(ASSET_ID + " property is missing");
+      return;
+    }
+
+    if (call.hasOption(VOLUME)) {
+      call.error(VOLUME + " property is missing");
+      return;
+    }
+
+    try {
+      initSoundPool();
+
+      String audioId = call.getString(ASSET_ID);
+      float volume = call.getFloat(VOLUME);
+
+      if (!audioAssetList.containsKey(audioId)) {
+        call.error(audioId + " asset is not loaded");
+        return;
+      }
+
+      AudioAsset asset = audioAssetList.get(audioId);
+      if (asset != null) {
+        asset.setVolume(volume);
+      }
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  private void preloadAsset(PluginCall call) {
+    double volume = 1.0;
+    int audioChannelNum = 1;
+
+    try {
+      initSoundPool();
+
+      String audioId = call.getString(ASSET_ID);
+      String assetPath = call.getString(ASSET_PATH);
+
+      if (audioAssetList.containsKey(audioId)) {
+        call.error(audioId + " asset is already loaded");
+        return;
+      }
+
+      String fullPath = "raw/".concat(assetPath);
+
+      if (call.getDouble(VOLUME) == null) {
+        volume = 1.0;
+      } else {
+        volume = call.getDouble(VOLUME, 0.5);
+      }
+
+      if (call.getInt(AUDIO_CHANNEL_NUM) == null) {
+        audioChannelNum = 1;
+      } else {
+        audioChannelNum = call.getInt(AUDIO_CHANNEL_NUM);
+      }
+
+      Context ctx = getBridge().getActivity().getApplicationContext();
+      AssetManager am = ctx.getResources().getAssets();
+      AssetFileDescriptor assetFileDescriptor = am.openFd(fullPath);
+
+      AudioAsset asset = new AudioAsset(
+        assetFileDescriptor,
+        audioChannelNum,
+        (float) volume
+      );
+      audioAssetList.put(audioId, asset);
+
+      call.success();
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  private void playOrLoop(String action, final PluginCall call) {
+    try {
+      initSoundPool();
+
+      final String audioId = call.getString(ASSET_ID);
+
+      if (audioAssetList.containsKey(audioId)) {
+        AudioAsset asset = audioAssetList.get(audioId);
+        if (LOOP.equals(action) && asset != null) {
+          asset.loop();
+        } else if (asset != null) {
+          asset.play(
+            new Callable<Void>() {
+
+              @Override
+              public Void call() throws Exception {
+                call.success(new JSObject().put(ASSET_ID, audioId));
+
+                return null;
+              }
             }
-        } catch (Exception ex) {
-            call.error(ex.getMessage());
+          );
         }
+      }
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  private void initSoundPool() {
+    if (audioAssetList == null) {
+      audioAssetList = new HashMap<>();
     }
 
-    @PluginMethod()
-    public void stop(PluginCall call) {
-        try {
-            initSoundPool();
-            String audioId = call.getString(ASSET_ID);
-
-            if (audioAssetList.containsKey(audioId)) {
-                AudioAsset asset = audioAssetList.get(audioId);
-                if (asset != null) {
-                    asset.stop();
-                }
-            } else {
-                call.error(ERROR_ASSET_NOT_LOADED + " - " + audioId);
-            }
-        } catch (Exception ex) {
-            call.error(ex.getMessage());
-        }
+    if (resumeList == null) {
+      resumeList = new ArrayList<>();
     }
-
-    @PluginMethod()
-    public void unload(PluginCall call) {
-        try {
-            initSoundPool();
-            new JSObject();
-            JSObject status;
-
-            if (isStringValid(call.getString(ASSET_ID))) {
-                String audioId = call.getString(ASSET_ID);
-
-                if (audioAssetList.containsKey(audioId)) {
-                    AudioAsset asset = audioAssetList.get(audioId);
-                    if (asset != null) {
-                        asset.unload();
-                        audioAssetList.remove(audioId);
-
-                        status = new JSObject();
-                        status.put("status", "OK");
-                        call.success(status);
-                    } else {
-                        status = new JSObject();
-                        status.put("status", false);
-                        call.success(status);
-                    }
-                } else {
-                    status = new JSObject();
-                    status.put("status", ERROR_AUDIO_ASSET_MISSING + " - " + audioId);
-                    call.success(status);
-                }
-            } else {
-                status = new JSObject();
-                status.put("status", ERROR_AUDIO_ID_MISSING);
-                call.success(status);
-            }
-        } catch (Exception ex) {
-            call.error(ex.getMessage());
-        }
-    }
-
-    @PluginMethod()
-    public void setVolume(PluginCall call) {
-        try {
-            initSoundPool();
-
-            String audioId = call.getString(ASSET_ID);
-            float volume = call.getFloat(VOLUME);
-
-            if (audioAssetList.containsKey(audioId)) {
-                AudioAsset asset = audioAssetList.get(audioId);
-                if (asset != null) {
-                    asset.setVolume(volume);
-                }
-            } else {
-                call.error(ERROR_AUDIO_ASSET_MISSING);
-            }
-        } catch (Exception ex) {
-            call.error(ex.getMessage());
-        }
-    }
-
-    private void preloadAsset(PluginCall call) {
-        double volume = 1.0;
-        int audioChannelNum = 1;
-
-        try {
-            initSoundPool();
-
-            String audioId = call.getString(ASSET_ID);
-
-            if (!isStringValid(audioId)) {
-                call.error(ERROR_AUDIO_ID_MISSING + " - " + audioId);
-                return;
-            }
-
-            if (!audioAssetList.containsKey(audioId)) {
-                String assetPath = call.getString(ASSET_PATH);
-
-                if (!isStringValid(assetPath)) {
-                    call.error(ERROR_ASSET_PATH_MISSING + " - " + audioId + " - " + assetPath);
-                    return;
-                }
-
-                String fullPath = "raw/".concat(assetPath);
-
-                if (call.getDouble(VOLUME) == null) {
-                    volume = 1.0;
-                } else {
-                    volume = call.getDouble(VOLUME, 0.5);
-                }
-
-                if (call.getInt(AUDIO_CHANNEL_NUM) == null) {
-                    audioChannelNum = 1;
-                } else {
-                    audioChannelNum = call.getInt(AUDIO_CHANNEL_NUM);
-                }
-
-                Context ctx = getBridge().getActivity().getApplicationContext();
-                AssetManager am = ctx.getResources().getAssets();
-                AssetFileDescriptor assetFileDescriptor = am.openFd(fullPath);
-
-                AudioAsset asset = new AudioAsset(assetFileDescriptor, audioChannelNum, (float) volume);
-                audioAssetList.put(audioId, asset);
-
-                JSObject status = new JSObject();
-                status.put("STATUS", "OK");
-                call.success(status);
-            } else {
-                call.error(ERROR_AUDIO_EXISTS);
-            }
-        } catch (Exception ex) {
-            call.error(ex.getMessage());
-        }
-    }
-
-    private void playOrLoop(String action, final PluginCall call) {
-        try {
-            initSoundPool();
-
-            final String audioId = call.getString(ASSET_ID);
-
-            if (audioAssetList.containsKey(audioId)) {
-                AudioAsset asset = audioAssetList.get(audioId);
-                if (LOOP.equals(action) && asset != null) {
-                    asset.loop();
-                } else if (asset != null) {
-                    asset.play(new Callable<Void>() {
-                        @Override
-                        public Void call() throws Exception {
-                            call.success(new JSObject().put(ASSET_ID, audioId));
-
-                            return null;
-                        }
-                    });
-                }
-            }
-        } catch (Exception ex) {
-            call.error(ex.getMessage());
-        }
-    }
-
-    private void initSoundPool() {
-        if (audioAssetList == null) {
-            audioAssetList = new HashMap<>();
-        }
-
-        if (resumeList == null) {
-            resumeList = new ArrayList<>();
-        }
-    }
-
-    private boolean isStringValid(String value) {
-        return (value != null && !value.isEmpty() && !value.equals("null"));
-    }
-
+  }
 }
