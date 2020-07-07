@@ -150,13 +150,28 @@ public class NativeAudio: CAPPlugin {
         }
     }
     
-    @objc func setVoume(_ call: CAPPluginCall) {
+    @objc func setVolume(_ call: CAPPluginCall) {
+        if !call.hasOption(Constant.AssetIdKey) {
+            call.error(Constant.AssetIdKey + " property is missing")
+            return
+        }
+        
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         let volume = call.getFloat(Constant.Volume) ?? 1.0
         
-        let player : AVAudioPlayer! = self.audioList[audioId] as? AVAudioPlayer
-        if player != nil {
-            player.setVolume(volume, fadeDuration: 1)
+        if self.audioList[audioId] == nil {
+            call.error(audioId + " asset is not loaded")
+        }
+        
+        let asset = self.audioList[audioId]
+        
+        if asset != nil {
+            if asset is AudioAsset {
+                let audioAsset = asset as? AudioAsset
+                audioAsset?.setVolume(volume: NSNumber(value: volume))
+                
+                call.success()
+            }
         }
     }
     
@@ -188,8 +203,8 @@ public class NativeAudio: CAPPlugin {
         let asset = audioList[audioId]
         let queue = DispatchQueue(label: "com.getcapacitor.community.audio.simple.queue", qos: .userInitiated)
         
-        if asset == nil {
-            call.error(audioId + "asset is not loaded")
+        if asset != nil {
+            call.error(audioId + " asset is already loaded")
             return
         }
         
