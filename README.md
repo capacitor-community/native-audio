@@ -78,37 +78,27 @@ No configuration required for this plugin.
 
 ## Supported methods
 
-| Name                | Android | iOS | Web |
-| :------------------ | :------ | :-- | :-- |
-| configure           | ✅      | ✅  | ❌  |
-| preloadSimple       | ✅      | ✅  | ❌  |
-| preloadComplex      | ✅      | ✅  | ❌  |
-| play                | ✅      | ✅  | ❌  |
-| loop                | ✅      | ✅  | ❌  |
-| stop                | ✅      | ✅  | ❌  |
-| unload              | ✅      | ✅  | ❌  |
-| setVolumeForComplex | ✅      | ✅  | ❌  |
+| Name           | Android | iOS | Web |
+| :------------- | :------ | :-- | :-- |
+| preloadSimple  | ✅      | ✅  | ❌  |
+| preloadComplex | ✅      | ✅  | ❌  |
+| play           | ✅      | ✅  | ❌  |
+| pause          | ✅      | ❌  | ❌  |
+| resume         | ✅      | ❌  | ❌  |
+| loop           | ✅      | ✅  | ❌  |
+| stop           | ✅      | ✅  | ❌  |
+| unload         | ✅      | ✅  | ❌  |
+| setVolume      | ✅      | ✅  | ❌  |
 
 ## Usage
 
 ```typescript
-// Must import the package once to make sure the web support initializes
-import "@capacitor-community/http";
-
 import { Plugins } from "@capacitor/core";
 
 const { NativeAudio } = Plugins;
 
 /**
- * This method will throw an exception triggering crashlytics to log the event.
- * @param none
- * @returns void
- */
-NativeAudio.configure({
-  fade: "",
-});
-
-/**
+ * Platform: Android/iOS
  * This method will load short duration audio file into memory.
  * @param assetPath - relative path of the file or absolute url (http://)
  *        assetId - unique identifier of the file
@@ -120,11 +110,13 @@ NativeAudio.preloadSimple({
 });
 
 /**
+ * Platform: Android/iOS
  * This method will load more optimized audio files for background into memory.
  * @param assetPath - relative path of the file or absolute url (http://)
  *        assetId - unique identifier of the file
  *        volume - numerical value of the volume between 0.1 - 1.0
  *        audioChannelNum - number of audio channels
+ *        fade - boolean true/false whether to fade transitions
  * @returns void
  */
 NativeAudio.preloadComplex({
@@ -135,6 +127,7 @@ NativeAudio.preloadComplex({
 });
 
 /**
+ * Platform: Android/iOS
  * This method will play the loaded audio file if present in the memory.
  * @param assetId - identifier of the asset
  * @returns void
@@ -144,6 +137,7 @@ NativeAudio.play({
 });
 
 /**
+ * Platform: Android/iOS
  * This method will loop the audio file for playback.
  * @param assetId - identifier of the asset
  * @returns void
@@ -153,7 +147,8 @@ NativeAudio.loop({
 });
 
 /**
- * This method will stop the audio file if it's currently playing.
+ * Platform: Android/iOS
+ * This method will stop the audio file during playback.
  * @param assetId - identifier of the asset
  * @returns void
  */
@@ -162,7 +157,28 @@ NativeAudio.stop({
 });
 
 /**
- * This method will unload the audio file from the memory.
+ * Platform: Android/iOS
+ * This method will pause the audio file during playback.
+ * @param assetId - identifier of the asset
+ * @returns void
+ */
+NativeAudio.pause({
+  assetId: "chime_audio",
+});
+
+/**
+ * Platform: Android/iOS
+ * This method will resume the audio file if paused.
+ * @param assetId - identifier of the asset
+ * @returns void
+ */
+NativeAudio.resume({
+  assetId: "chime_audio",
+});
+
+/**
+ * Platform: Android/iOS
+ * This method will stop and unload the audio file.
  * @param assetId - identifier of the asset
  * @returns void
  */
@@ -171,13 +187,14 @@ NativeAudio.unload({
 });
 
 /**
+ * Platform: Android/iOS
  * This method will set the new volume for a audio file.
  * @param assetId - identifier of the asset
  *        volume - numerical value of the volume between 0.1 - 1.0
  * @returns void
  */
 NativeAudio.setVolume({
-  assetId: "inception_audio",
+  assetId: "chime_audio",
   volume: 0.4,
 });
 ```
