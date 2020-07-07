@@ -2,7 +2,7 @@
 <h3 align="center">Native Audio</h3>
 <p align="center"><strong><code>@capacitor-community/native-audio</code></strong></p>
 <p align="center">
-  Capacitor community plugin for native <a href="https://firebase.google.com/docs/crashlytics">Firebase Crashlytics</a>.
+  Capacitor community plugin for native audio.
 </p>
 
 <p align="center">
