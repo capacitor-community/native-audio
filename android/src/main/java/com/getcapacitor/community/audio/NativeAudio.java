@@ -17,6 +17,7 @@ import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -118,12 +119,12 @@ public class NativeAudio
    */
   @PluginMethod
   public void preloadSimple(final PluginCall call) {
-    if (call.hasOption(ASSET_PATH)) {
+    if (!call.hasOption(ASSET_PATH)) {
       call.error(ASSET_PATH + " property is missing");
       return;
     }
 
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
@@ -146,12 +147,12 @@ public class NativeAudio
    */
   @PluginMethod
   public void preloadComplex(final PluginCall call) {
-    if (call.hasOption(ASSET_PATH)) {
+    if (!call.hasOption(ASSET_PATH)) {
       call.error(ASSET_PATH + " property is missing");
       return;
     }
 
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
@@ -174,7 +175,7 @@ public class NativeAudio
    */
   @PluginMethod
   public void play(final PluginCall call) {
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
@@ -198,7 +199,7 @@ public class NativeAudio
    */
   @PluginMethod
   public void loop(final PluginCall call) {
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
@@ -222,7 +223,7 @@ public class NativeAudio
    */
   @PluginMethod
   public void pause(PluginCall call) {
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
@@ -257,7 +258,7 @@ public class NativeAudio
    */
   @PluginMethod
   public void resume(PluginCall call) {
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
@@ -288,7 +289,7 @@ public class NativeAudio
    */
   @PluginMethod
   public void stop(PluginCall call) {
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
@@ -318,7 +319,7 @@ public class NativeAudio
    */
   @PluginMethod
   public void unload(PluginCall call) {
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
@@ -354,12 +355,12 @@ public class NativeAudio
    */
   @PluginMethod
   public void setVolume(PluginCall call) {
-    if (call.hasOption(ASSET_ID)) {
+    if (!call.hasOption(ASSET_ID)) {
       call.error(ASSET_ID + " property is missing");
       return;
     }
 
-    if (call.hasOption(VOLUME)) {
+    if (!call.hasOption(VOLUME)) {
       call.error(VOLUME + " property is missing");
       return;
     }
@@ -388,18 +389,16 @@ public class NativeAudio
     double volume = 1.0;
     int audioChannelNum = 1;
 
+    String audioId = call.getString(ASSET_ID);
+    String assetPath = call.getString(ASSET_PATH);
+
     try {
       initSoundPool();
-
-      String audioId = call.getString(ASSET_ID);
-      String assetPath = call.getString(ASSET_PATH);
 
       if (audioAssetList.containsKey(audioId)) {
         call.error(audioId + " asset is already loaded");
         return;
       }
-
-      String fullPath = "raw/".concat(assetPath);
 
       if (call.getDouble(VOLUME) == null) {
         volume = 1.0;
@@ -414,8 +413,12 @@ public class NativeAudio
       }
 
       Context ctx = getBridge().getActivity().getApplicationContext();
-      AssetManager am = ctx.getResources().getAssets();
-      AssetFileDescriptor assetFileDescriptor = am.openFd(fullPath);
+      int identifier = ctx
+        .getResources()
+        .getIdentifier(assetPath, "raw", this.getContext().getPackageName());
+      AssetFileDescriptor assetFileDescriptor = ctx
+        .getResources()
+        .openRawResourceFd(identifier);
 
       AudioAsset asset = new AudioAsset(
         assetFileDescriptor,
@@ -425,8 +428,12 @@ public class NativeAudio
       audioAssetList.put(audioId, asset);
 
       call.success();
-    } catch (Exception ex) {
-      call.error(ex.getMessage());
+    } catch (Exception exp) {
+      if (exp instanceof FileNotFoundException) {
+        call.error(assetPath + " file cannot be found");
+      } else {
+        call.error(exp.getMessage());
+      }
     }
   }
 
