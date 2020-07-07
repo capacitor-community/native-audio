@@ -31,17 +31,33 @@ public class NativeAudio: CAPPlugin {
         }
     }
     
-    @objc func configure(_ call: CAPPluginCall) {
-        let fade: Bool = call.getBool(Constant.FadeKey) ?? false
-        
-        fadeMusic = fade
-    }
-    
     @objc func preloadSimple(_ call: CAPPluginCall) {
+        if !call.hasOption("assetPath") {
+            call.error("assetPath property is missing")
+            return
+        }
+        
+        
+        if !call.hasOption("assetId") {
+            call.error("assetId property is missing")
+            return
+        }
+        
         preloadAsset(call, isComplex: false)
     }
     
     @objc func preloadComplex(_ call: CAPPluginCall) {
+        if !call.hasOption("assetPath") {
+            call.error("assetPath property is missing")
+            return
+        }
+        
+        
+        if !call.hasOption("assetId") {
+            call.error("assetId property is missing")
+            return
+        }
+        
         preloadAsset(call, isComplex: true)
     }
     
@@ -146,56 +162,60 @@ public class NativeAudio: CAPPlugin {
     
     private func preloadAsset(_ call: CAPPluginCall, isComplex complex: Bool) {
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
+        let assetPath: String = call.getString(Constant.AssetPathKey) ?? ""
         let channels: NSNumber?
         let volume: Float?
         let delay: NSNumber?
         
-        if audioId != "" {
-            let assetPath: String = call.getString(Constant.AssetPathKey) ?? ""
+        if call.hasOption("fade") {
+            self.fadeMusic = call.getBool("fade") ?? false
+        }
+        
+        if (complex) {
+            volume = call.getFloat("volume") ?? 1.0
+            channels = NSNumber(value: call.getInt("channels") ?? 1)
+            delay = NSNumber(value: call.getInt("delay") ?? 1)
+        } else {
+            channels = 0
+            volume = 0
+            delay = 0
+        }
+        
+        if audioList.isEmpty {
+            audioList = [:]
+        }
+        
+        let asset = audioList[audioId]
+        let queue = DispatchQueue(label: "com.getcapacitor.community.audio.simple.queue", qos: .userInitiated)
+        
+        if asset == nil {
+            call.error(audioId + "asset is not loaded")
+            return
+        }
+        
+        queue.async {
+            let assetPathSplit = assetPath.components(separatedBy: ".")
+            let basePath = Bundle.main.path(forResource: assetPathSplit[0], ofType: assetPathSplit[1])
             
-            if (complex) {
-                volume = call.getFloat("volume") ?? 1.0
-                channels = NSNumber(value: call.getInt("channels") ?? 1)
-                delay = NSNumber(value: call.getInt("delay") ?? 1)
-            } else {
-                channels = 0
-                volume = 0
-                delay = 0
-            }
-            
-            if audioList.isEmpty {
-                audioList = [:]
-            }
-            
-            let asset = audioList[audioId]
-            let queue = DispatchQueue(label: "com.getcapacitor.community.audio.simple.queue", qos: .userInitiated)
-            
-            queue.async {
-                if asset == nil {
-                    let assetPathSplit = assetPath.components(separatedBy: ".")
-                    let basePath = Bundle.main.path(forResource: assetPathSplit[0], ofType: assetPathSplit[1])
+            if FileManager.default.fileExists(atPath: basePath ?? "") {
+                if !complex {
+                    let pathUrl = URL(fileURLWithPath: basePath ?? "")
+                    let soundFileUrl: CFURL = CFBridgingRetain(pathUrl) as! CFURL
+                    var soundId = SystemSoundID()
                     
-                    if FileManager.default.fileExists(atPath: basePath ?? "") {
-                        if !complex {
-                            let pathUrl = URL(fileURLWithPath: basePath ?? "")
-                            let soundFileUrl: CFURL = CFBridgingRetain(pathUrl) as! CFURL
-                            var soundId = SystemSoundID()
-                            
-                            AudioServicesCreateSystemSoundID(soundFileUrl, &soundId)
-                            self.audioList[audioId] = NSNumber(value: Int32(soundId))
-                            
-                            call.success()
-                        } else {
-                            let audioAsset: AudioAsset = AudioAsset(path: basePath, withChannels: channels, withVolume: volume as NSNumber?, withFadeDelay: delay)
-                            
-                            self.audioList[audioId] = audioAsset
-                            
-                            call.success()
-                        }
-                    } else {
-                        call.error(Constant.ErrorAssetPath)
-                    }
+                    AudioServicesCreateSystemSoundID(soundFileUrl, &soundId)
+                    self.audioList[audioId] = NSNumber(value: Int32(soundId))
+                    
+                    call.success()
+                } else {
+                    let audioAsset: AudioAsset = AudioAsset(path: basePath, withChannels: channels, withVolume: volume as NSNumber?, withFadeDelay: delay)
+                    
+                    self.audioList[audioId] = audioAsset
+                    
+                    call.success()
                 }
+            } else {
+                call.error(Constant.ErrorAssetPath)
             }
         }
     }
