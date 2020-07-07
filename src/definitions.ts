@@ -14,10 +14,6 @@ export interface NativeAudioPlugin {
   setVolume(options: { assetId: string; volume: number }): Promise<void>;
 }
 
-export interface ConfigureOptions {
-  fade?: boolean;
-}
-
 export interface PreloadSimpleOptions {
   assetPath: string;
   assetId: string;

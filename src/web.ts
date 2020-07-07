@@ -1,7 +1,6 @@
 import { WebPlugin } from "@capacitor/core";
 import {
   NativeAudioPlugin,
-  ConfigureOptions,
   PreloadSimpleOptions,
   PreloadComplexOptions,
 } from "./definitions";
