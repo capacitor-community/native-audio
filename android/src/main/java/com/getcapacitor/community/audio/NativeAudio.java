@@ -17,12 +17,15 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -170,12 +173,54 @@ public class NativeAudio
 
   @PluginMethod
   public void getCurrentTime(final PluginCall call) {
-    call.error("getCurrentTime is not implemented");
+    try {
+      initSoundPool();
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!isStringValid(audioId)) {
+        call.error(ERROR_AUDIO_ID_MISSING + " - " + audioId);
+        return;
+      }
+
+      if (audioAssetList.containsKey(audioId)) {
+        AudioAsset asset = audioAssetList.get(audioId);
+        if (asset != null) {
+          call.success(
+            new JSObject().put("currentTime", asset.getCurrentPosition())
+          );
+        }
+      } else {
+        call.error(ERROR_AUDIO_ASSET_MISSING + " - " + audioId);
+      }
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
   }
 
   @PluginMethod
   public void getDuration(final PluginCall call) {
-    call.error("getCurrentTime is not implemented");
+    try {
+      initSoundPool();
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!isStringValid(audioId)) {
+        call.error(ERROR_AUDIO_ID_MISSING + " - " + audioId);
+        return;
+      }
+
+      if (audioAssetList.containsKey(audioId)) {
+        AudioAsset asset = audioAssetList.get(audioId);
+        if (asset != null) {
+          call.success(new JSObject().put("duration", asset.getDuration()));
+        }
+      } else {
+        call.error(ERROR_AUDIO_ASSET_MISSING + " - " + audioId);
+      }
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
   }
 
   @PluginMethod
@@ -315,6 +360,12 @@ public class NativeAudio
     }
   }
 
+  public void dispatchComplete(String assetId) {
+    JSObject ret = new JSObject();
+    ret.put("assetId", assetId);
+    notifyListeners("complete", ret);
+  }
+
   private void preloadAsset(PluginCall call) {
     double volume = 1.0;
     int audioChannelNum = 1;
@@ -323,6 +374,8 @@ public class NativeAudio
       initSoundPool();
 
       String audioId = call.getString(ASSET_ID);
+
+      boolean isUrl = call.getBoolean("isUrl", false);
 
       if (!isStringValid(audioId)) {
         call.error(ERROR_AUDIO_ID_MISSING + " - " + audioId);
@@ -353,11 +406,23 @@ public class NativeAudio
           audioChannelNum = call.getInt(AUDIO_CHANNEL_NUM);
         }
 
-        Context ctx = getBridge().getActivity().getApplicationContext();
-        AssetManager am = ctx.getResources().getAssets();
-        AssetFileDescriptor assetFileDescriptor = am.openFd(fullPath);
+        AssetFileDescriptor assetFileDescriptor;
+        if (isUrl) {
+          File f = new File(new URI(fullPath));
+          ParcelFileDescriptor p = ParcelFileDescriptor.open(
+            f,
+            ParcelFileDescriptor.MODE_READ_ONLY
+          );
+          assetFileDescriptor = new AssetFileDescriptor(p, 0, -1);
+        } else {
+          Context ctx = getBridge().getActivity().getApplicationContext();
+          AssetManager am = ctx.getResources().getAssets();
+          assetFileDescriptor = am.openFd(fullPath);
+        }
 
         AudioAsset asset = new AudioAsset(
+          this,
+          audioId,
           assetFileDescriptor,
           audioChannelNum,
           (float) volume

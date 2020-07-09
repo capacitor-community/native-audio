@@ -38,7 +38,9 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
                     player.volume = volume.floatValue
                     player.prepareToPlay()
                     self.channels.addObjects(from: [player as Any])
-                    player.delegate = self
+                    if channels == 1 {
+                        player.delegate = self
+                    }
                 }
             } catch {
                 
@@ -149,7 +151,7 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
     
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         NSLog("playerDidFinish")
-        self.owner.dispatchEvent(type:"complete", withData: [
+        self.owner.notifyListeners("complete", data: [
             "assetId": self.assetId
         ])
     }

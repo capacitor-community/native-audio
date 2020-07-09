@@ -31,10 +31,6 @@ public class NativeAudio: CAPPlugin {
         }
     }
 
-    public func dispatchEvent(type: String, withData data:PluginResultData) {
-        self.notifyListeners(type, data: data)
-    }
-    
     @objc func configure(_ call: CAPPluginCall) {
         let fade: Bool = call.getBool(Constant.FadeKey) ?? false
         
