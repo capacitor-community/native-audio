@@ -11,13 +11,16 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -191,6 +194,92 @@ public class NativeAudio
           }
         }
       );
+  }
+
+  /**
+   * This method will return the current time of the audio file
+   * @param call
+   */
+  @PluginMethod
+  public void getCurrentTime(final PluginCall call) {
+    try {
+      initSoundPool();
+
+      if (!call.hasOption(ASSET_ID)) {
+        call.error(ASSET_ID + " property is missing");
+        return;
+      }
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!audioAssetList.containsKey(audioId)) {
+        call.error(audioId + " asset is not loaded");
+        return;
+      }
+
+      AudioAsset asset = audioAssetList.get(audioId);
+      if (asset != null) {
+        call.success(
+          new JSObject().put("currentTime", asset.getCurrentPosition())
+        );
+      }
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  /**
+   * This method will return the duration of the audio file
+   * @param call
+   */
+  @PluginMethod
+  public void getDuration(final PluginCall call) {
+    try {
+      initSoundPool();
+
+      if (!call.hasOption(ASSET_ID)) {
+        call.error(ASSET_ID + " property is missing");
+        return;
+      }
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!audioAssetList.containsKey(audioId)) {
+        call.error(audioId + " asset is not loaded");
+        return;
+      }
+
+      AudioAsset asset = audioAssetList.get(audioId);
+      if (asset != null) {
+        call.success(new JSObject().put("duration", asset.getDuration()));
+      }
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
+  }
+
+  /**
+   * This method will return whether an audio file is loaded
+   * @param call
+   */
+  @PluginMethod
+  public void isLoaded(final PluginCall call) {
+    try {
+      initSoundPool();
+
+      if (!call.hasOption(ASSET_ID)) {
+        call.error(ASSET_ID + " property is missing");
+        return;
+      }
+
+      String audioId = call.getString(ASSET_ID);
+
+      call.resolve(
+        new JSObject().put("isLoaded", audioAssetList.containsKey(audioId))
+      );
+    } catch (Exception ex) {
+      call.error(ex.getMessage());
+    }
   }
 
   /**
@@ -385,6 +474,12 @@ public class NativeAudio
     }
   }
 
+  public void dispatchComplete(String assetId) {
+    JSObject ret = new JSObject();
+    ret.put("assetId", assetId);
+    notifyListeners("complete", ret);
+  }
+
   private void preloadAsset(PluginCall call) {
     double volume = 1.0;
     int audioChannelNum = 1;
@@ -412,15 +507,27 @@ public class NativeAudio
         audioChannelNum = call.getInt(AUDIO_CHANNEL_NUM);
       }
 
-      Context ctx = getBridge().getActivity().getApplicationContext();
-      int identifier = ctx
-        .getResources()
-        .getIdentifier(assetPath, "raw", this.getContext().getPackageName());
-      AssetFileDescriptor assetFileDescriptor = ctx
-        .getResources()
-        .openRawResourceFd(identifier);
+      boolean isUrl = call.getBoolean("isUrl", false);
+      AssetFileDescriptor assetFileDescriptor;
+
+      if (isUrl) {
+        File f = new File(new URI(assetPath));
+        ParcelFileDescriptor p = ParcelFileDescriptor.open(
+          f,
+          ParcelFileDescriptor.MODE_READ_ONLY
+        );
+        assetFileDescriptor = new AssetFileDescriptor(p, 0, -1);
+      } else {
+        Context ctx = getBridge().getActivity().getApplicationContext();
+        int identifier = ctx
+          .getResources()
+          .getIdentifier(assetPath, "raw", this.getContext().getPackageName());
+        assetFileDescriptor = ctx.getResources().openRawResourceFd(identifier);
+      }
 
       AudioAsset asset = new AudioAsset(
+        this,
+        audioId,
         assetFileDescriptor,
         audioChannelNum,
         (float) volume

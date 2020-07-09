@@ -1,3 +1,5 @@
+import { PluginListenerHandle } from "@capacitor/core";
+
 declare module "@capacitor/core" {
   interface PluginRegistry {
     NativeAudio: NativeAudioPlugin;
@@ -12,6 +14,15 @@ export interface NativeAudioPlugin {
   stop(options: { assetId: string }): Promise<void>;
   unload(options: { assetId: string }): Promise<void>;
   setVolume(options: { assetId: string; volume: number }): Promise<void>;
+  getCurrentTime(options: {
+    assetId: string;
+  }): Promise<{ currentTime: number }>;
+  getDuration(options: { assetId: string }): Promise<{ duration: number }>;
+  isLoaded(options: { assetId: string }): Promise<{ isLoaded: boolean }>;
+  addListener(
+    eventName: "complete",
+    listenerFunc: (options: { assetId: string }) => void
+  ): PluginListenerHandle;
 }
 
 export interface PreloadSimpleOptions {
@@ -25,4 +36,5 @@ export interface PreloadComplexOptions {
   volume?: number;
   audioChannelNum?: number;
   fade?: boolean;
+  isUrl?: boolean;
 }

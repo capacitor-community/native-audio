@@ -28,13 +28,13 @@
 To use npm
 
 ```bash
-npm install @capacitor/native-audio
+npm install @capacitor-community/native-audio
 ```
 
 To use yarn
 
 ```bash
-yarn add @capacitor/native-audio
+yarn add @capacitor-community/native-audio
 ```
 
 Sync native files
@@ -89,6 +89,9 @@ No configuration required for this plugin.
 | stop           | ✅      | ✅  | ❌  |
 | unload         | ✅      | ✅  | ❌  |
 | setVolume      | ✅      | ✅  | ❌  |
+| getDuration    | ✅      | ✅  | ❌  |
+| getCurrentTime | ✅      | ✅  | ❌  |
+| isLoaded       | ✅      | ✅  | ❌  |
 
 ## Usage
 
@@ -112,11 +115,12 @@ NativeAudio.preloadSimple({
 /**
  * Platform: Android/iOS
  * This method will load more optimized audio files for background into memory.
- * @param assetPath - relative path of the file or absolute url (http://)
+ * @param assetPath - relative path of the file or absolute url (file://)
  *        assetId - unique identifier of the file
  *        volume - numerical value of the volume between 0.1 - 1.0
  *        audioChannelNum - number of audio channels
  *        fade - boolean true/false whether to fade transitions
+ *        isUrl - pass true if assetPath is a `file://` url
  * @returns void
  */
 NativeAudio.preloadComplex({
@@ -124,6 +128,7 @@ NativeAudio.preloadComplex({
   assetId: "inception_audio",
   volume: 1.0,
   audioChannelNum: 1,
+  isUrl: false
 });
 
 /**
@@ -197,4 +202,26 @@ NativeAudio.setVolume({
   assetId: "chime_audio",
   volume: 0.4,
 });
+
+/**
+ * this method will get the duration of an audio file.
+ * only works if channels == 1
+ */
+NativeAudio.getDuration({
+  assetId: 'inception_audio'
+})
+.then(result => {
+  console.log(result.duration);
+})
+
+/**
+ * this method will get the current time of a playing audio file.
+ * only works if channels == 1
+ */
+NativeAudio.getCurrentTime({
+  assetId: 'inception_audio'
+});
+.then(result => {
+  console.log(result.currentTime);
+})
 ```
