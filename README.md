@@ -28,13 +28,13 @@
 To use npm
 
 ```bash
-npm install @capacitor/native-audio
+npm install @capacitor-community/native-audio
 ```
 
 To use yarn
 
 ```bash
-yarn add @capacitor/native-audio
+yarn add @capacitor-community/native-audio
 ```
 
 Sync native files
