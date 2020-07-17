@@ -48,7 +48,7 @@ On iOS, no further steps are needed.
 On Android, register the plugin in your main activity:
 
 ```java
-import com.getcapacitor.community.audio.nativeaudio.NativeAudio;
+import com.getcapacitor.community.audio.NativeAudio;
 
 public class MainActivity extends BridgeActivity {
 
