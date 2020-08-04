@@ -103,7 +103,7 @@ const { NativeAudio } = Plugins;
 /**
  * Platform: Android/iOS
  * This method will load short duration audio file into memory.
- * @param assetPath - relative path of the file in app bundle or res/raw
+ * @param assetPath - relative path of the file in app bundle (iOS) OR name of resource file (no extension) in res/raw (Android)
  *        assetId - unique identifier of the file
  * @returns void
  */
@@ -115,7 +115,7 @@ NativeAudio.preloadSimple({
 /**
  * Platform: Android/iOS
  * This method will load more optimized audio files for background into memory.
- * @param assetPath - relative path of the file in app bundle or res/raw or absolute url (file://)
+ * @param assetPath - relative path of the file in app bundle (iOS) OR name of resource file (no extension) in res/raw (Android), OR absolute file url (file://) by passing `isUrl=true`
  *        assetId - unique identifier of the file
  *        volume - numerical value of the volume between 0.1 - 1.0
  *        audioChannelNum - number of audio channels
