@@ -97,13 +97,22 @@ public class NativeAudio: CAPPlugin {
         }
     }
     
-    @objc func resume(_ call: CAPPluginCall) {
-//        let audioId = call.getString(Constant.AssetIdKey) ?? ""
+    @objc func pause(_ call: CAPPluginCall) {
+        guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
+            return
+        }
+
+        audioAsset.pause()
         call.success()
     }
-    
-    @objc func pause(_ call: CAPPluginCall) {
-        call.success() // TODO: Implement pause
+
+     @objc func resume(_ call: CAPPluginCall) {
+        guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
+            return
+        }
+
+        audioAsset.resume()
+        call.success()
     }
     
     @objc func stop(_ call: CAPPluginCall) {

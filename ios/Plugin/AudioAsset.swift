@@ -92,6 +92,18 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
             }
         }
     }
+
+    func pause() {
+        let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
+        player.pause()
+    }
+
+    func resume() {
+        let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
+        
+        let timeOffset = player.deviceCurrentTime + 0.01
+        player.play(atTime: timeOffset)
+    }
     
     func loop() {
         self.stop()
