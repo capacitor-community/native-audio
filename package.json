@@ -1,6 +1,6 @@
 {
-  "name": "@capacitor-community/native-audio",
-  "version": "0.1.2",
+  "name": "@bazumax/native-audio",
+  "version": "0.2.1",
   "description": "A native plugin for native audio engine",
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -12,14 +12,14 @@
     "prepare": "npm run build",
     "npm-publish": "np"
   },
-  "author": "Priyank Patel <priyank.patel@stackspace.ca>",
+  "author": "bazuka5801 <bazuka5801@mail.ru>",
   "license": "MIT",
   "dependencies": {
-    "@capacitor/core": "latest"
+    "@capacitor/core": "^3.0.0-beta.6"
   },
   "devDependencies": {
-    "@capacitor/android": "latest",
-    "@capacitor/ios": "latest",
+    "@capacitor/android": "^3.0.0-beta.6",
+    "@capacitor/ios": "^3.0.0-beta.6",
     "husky": "^4.2.5",
     "np": "^6.2.4",
     "prettier": "^2.0.5",
@@ -37,7 +37,7 @@
     "dist/",
     "ios/",
     "android/",
-    "CapacitorCommunityNativeAudio.podspec"
+    "BazumaxNativeAudio.podspec"
   ],
   "keywords": [
     "capacitor",
@@ -54,9 +54,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/capacitor-community/native-audio"
+    "url": "https://github.com/bazuka5801/native-audio"
   },
   "bugs": {
-    "url": "https://github.com/capacitor-community/native-audio/issues"
+    "url": "https://github.com/bazuka5801/native-audio/issues"
   }
 }
