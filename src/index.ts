@@ -7,3 +7,4 @@ const NativeAudio = registerPlugin<NativeAudio>('NativeAudio', {
 })
 
 export * from './definitions';
+export { NativeAudio };
