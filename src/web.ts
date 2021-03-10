@@ -1,12 +1,15 @@
-import { WebPlugin } from "@capacitor/core";
-import {
-  NativeAudioPlugin,
+import { WebPlugin } from '@capacitor/core';
+
+
+
+import { NativeAudio } from "./definitions";
+import type {
   ConfigureOptions,
   PreloadSimpleOptions,
   PreloadComplexOptions,
 } from "./definitions";
 
-export class NativeAudioWeb extends WebPlugin implements NativeAudioPlugin {
+export class NativeAudioWeb extends WebPlugin implements NativeAudio {
   constructor() {
     super({
       name: "NativeAudio",
@@ -61,5 +64,3 @@ const NativeAudio = new NativeAudioWeb();
 
 export { NativeAudio };
 
-import { registerWebPlugin } from "@capacitor/core";
-registerWebPlugin(NativeAudio);

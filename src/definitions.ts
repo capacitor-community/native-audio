@@ -1,12 +1,12 @@
-import { PluginListenerHandle } from "@capacitor/core";
+import type { PluginListenerHandle } from "@capacitor/core";
 
 declare module "@capacitor/core" {
   interface PluginRegistry {
-    NativeAudio: NativeAudioPlugin;
+    NativeAudio: NativeAudio;
   }
 }
 
-export interface NativeAudioPlugin {
+export interface NativeAudio {
   configure(options: ConfigureOptions): Promise<void>;
   preloadSimple(options: PreloadSimpleOptions): Promise<void>;
   preloadComplex(options: PreloadComplexOptions): Promise<void>;
