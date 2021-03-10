@@ -1,12 +1,12 @@
 # Capacitor Native Audio Plugin
 
-Capacitory community plugin for native audio engine.
+Capacitor plugin for native audio engine.
 
 ## Maintainers
 
-| Maintainer    | GitHub                                      | Social                     | Sponsoring Company |
-| ------------- | ------------------------------------------- | -------------------------- | ------------------ |
-| Priyank Patel | [priyankpat](https://github.com/priyankpat) | [N/A](https://twitter.com) | Ionic              |
+| Maintainer    | GitHub                                      | Social                     |
+| ------------- | ------------------------------------------- | -------------------------- |
+| Bazuev Maxim  | [bazuka5801](https://github.com/bazuka5801) | [Telegram](https://t.me/bazuka5801) |
 
 Mainteinance Status: Actively Maintained
 
@@ -30,34 +30,7 @@ Sync native files
 npx cap sync
 ```
 
-On iOS, no further steps are needed.
-
-On Android, register the plugin in your main activity:
-
-```java
-import com.getcapacitor.community.firebasecrashlytics.FirebaseCrashlytics;
-
-public class MainActivity extends BridgeActivity {
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    // Initializes the Bridge
-    this.init(
-        savedInstanceState,
-        new ArrayList<Class<? extends Plugin>>() {
-
-          {
-            // Additional plugins you've installed go here
-            // Ex: add(TotallyAwesomePlugin.class);
-            add(FirebaseCrashlytics.class);
-          }
-        }
-      );
-  }
-}
-```
+On iOS and Android, no further steps are needed.
 
 ## Configuration
 
