@@ -4,9 +4,9 @@ Capacitor plugin for native audio engine.
 
 ## Maintainers
 
-| Maintainer    | GitHub                                      | Social                     |
-| ------------- | ------------------------------------------- | -------------------------- |
-| Bazuev Maxim  | [bazuka5801](https://github.com/bazuka5801) | [Telegram](https://t.me/bazuka5801) |
+| Maintainer    | GitHub                                      | Social                              |
+| ------------- | ------------------------------------------- | ----------------------------------- |
+| Maxim Bazuev  | [bazuka5801](https://github.com/bazuka5801) | [Telegram](https://t.me/bazuka5801) |
 
 Mainteinance Status: Actively Maintained
 
