@@ -10,6 +10,13 @@ Capacitor plugin for native audio engine.
 
 Mainteinance Status: Actively Maintained
 
+## Preparation
+All audio place in specific platform folder
+
+Andoid: `android/app/src/assets`
+
+iOS: `ios/App/App/sounds`
+
 ## Installation
 
 To use npm
@@ -35,6 +42,12 @@ On iOS and Android, no further steps are needed.
 ## Configuration
 
 No configuration required for this plugin.
+<docgen-config>
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+
+
+</docgen-config>
 
 ## Supported methods
 
@@ -48,61 +61,41 @@ No configuration required for this plugin.
 | stop           | ✅      | ✅  | ❌  |
 | unload         | ✅      | ✅  | ❌  |
 | setVolume      | ✅      | ✅  | ❌  |
-| getDuration    | ❌      | ✅  | ❌  |
-| getCurrentTime | ❌      | ✅  | ❌  |
+| getDuration    | ✅      | ✅  | ❌  |
+| getCurrentTime | ✅      | ✅  | ❌  |
 
 ## Usage
 
+[Example repository](https://github.com/bazuka5801/native-audio-example)
+
 ```typescript
+import {NativeAudio} from '@capacitor-community/native-audio'
 
-import { Plugins } from '@capacitor/core';
-
-const { NativeAudio } = Plugins;
-
-/**
- * This method will throw an exception triggering crashlytics to log the event.
- * @param none
- * @returns void
- */
-NativeAudio.configure({
-  fade: '',
-});
-
-/**
- * This method will load short duration audio file into memory.
- * @param assetPath - relative path of the file or absolute url (http://)
- *        assetId - unique identifier of the file
- * @returns void
- */
-NativeAudio.preloadSimple({
-  assetPath: 'audio/chime.mp3',
-  assetId: 'chime_audio',
-});
 
 /**
  * This method will load more optimized audio files for background into memory.
  * @param assetPath - relative path of the file or absolute url (file://)
  *        assetId - unique identifier of the file
- *        volume - numerical value of the volume between 0.1 - 1.0
  *        audioChannelNum - number of audio channels
  *        isUrl - pass true if assetPath is a `file://` url
  * @returns void
  */
-NativeAudio.preloadComplex({
-  assetPath: 'audio/inception.mp3',
-  assetId: 'inception_audio',
-  volume: 1.0,
-  audioChannelNum: 1,
-  isUrl: false
+NativeAudio.preload({
+    assetId: "fire",
+    assetPath: "fire.mp3",
+    audioChannelNum: 1,
+    isUrl: false
 });
 
 /**
  * This method will play the loaded audio file if present in the memory.
  * @param assetId - identifier of the asset
+ * @param time - (optional) play with seek. example: 6.0 - start playing track from 6 sec
  * @returns void
  */
 NativeAudio.play({
-  assetId: 'chime_audio',
+    assetId: 'fire',
+    // time: 6.0 - seek time
 });
 
 /**
@@ -111,7 +104,7 @@ NativeAudio.play({
  * @returns void
  */
 NativeAudio.loop({
-  assetId: 'chime_audio',
+  assetId: 'fire',
 });
 
 
@@ -121,7 +114,7 @@ NativeAudio.loop({
  * @returns void
  */
 NativeAudio.stop({
-  assetId: 'chime_audio',
+  assetId: 'fire',
 });
 
 /**
@@ -130,7 +123,7 @@ NativeAudio.stop({
  * @returns void
  */
 NativeAudio.unload({
-  assetId: 'chime_audio',
+  assetId: 'fire',
 });
 
 /**
@@ -140,7 +133,7 @@ NativeAudio.unload({
  * @returns void
  */
 NativeAudio.setVolume({
-  assetId: 'inception_audio',
+  assetId: 'fire',
   volume: 0.4,
 });
 
@@ -149,7 +142,7 @@ NativeAudio.setVolume({
  * only works if channels == 1
  */
 NativeAudio.getDuration({
-  assetId: 'inception_audio'
+  assetId: 'fire'
 })
 .then(result => {
   console.log(result.duration);
@@ -160,9 +153,172 @@ NativeAudio.getDuration({
  * only works if channels == 1
  */
 NativeAudio.getCurrentTime({
-  assetId: 'inception_audio'
+  assetId: 'fire'
 });
 .then(result => {
   console.log(result.currentTime);
 })
 ```
+
+## API
+
+<docgen-index>
+
+<docgen-api>
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### configure(...)
+
+```typescript
+configure(options: ConfigureOptions) => Promise<void>
+```
+
+| Param         | Type                                                          |
+| ------------- | ------------------------------------------------------------- |
+| **`options`** | <code><a href="#configureoptions">ConfigureOptions</a></code> |
+
+--------------------
+
+
+### preload(...)
+
+```typescript
+preload(options: PreloadOptions) => Promise<void>
+```
+
+| Param         | Type                                                      |
+| ------------- | --------------------------------------------------------- |
+| **`options`** | <code><a href="#preloadoptions">PreloadOptions</a></code> |
+
+--------------------
+
+
+### play(...)
+
+```typescript
+play(options: { assetId: string; time: number; }) => Promise<void>
+```
+
+| Param         | Type                                            |
+| ------------- | ----------------------------------------------- |
+| **`options`** | <code>{ assetId: string; time: number; }</code> |
+
+--------------------
+
+
+### resume(...)
+
+```typescript
+resume(options: { assetId: string; }) => Promise<void>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+--------------------
+
+
+### loop(...)
+
+```typescript
+loop(options: { assetId: string; }) => Promise<void>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+--------------------
+
+
+### stop(...)
+
+```typescript
+stop(options: { assetId: string; }) => Promise<void>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+--------------------
+
+
+### unload(...)
+
+```typescript
+unload(options: { assetId: string; }) => Promise<void>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+--------------------
+
+
+### setVolume(...)
+
+```typescript
+setVolume(options: { assetId: string; volume: number; }) => Promise<void>
+```
+
+| Param         | Type                                              |
+| ------------- | ------------------------------------------------- |
+| **`options`** | <code>{ assetId: string; volume: number; }</code> |
+
+--------------------
+
+
+### getCurrentTime(...)
+
+```typescript
+getCurrentTime(options: { assetId: string; }) => Promise<{ currentTime: number; }>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ currentTime: number; }&gt;</code>
+
+--------------------
+
+
+### getDuration(...)
+
+```typescript
+getDuration(options: { assetId: string; }) => Promise<{ duration: number; }>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ duration: number; }&gt;</code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### ConfigureOptions
+
+| Prop       | Type                 |
+| ---------- | -------------------- |
+| **`fade`** | <code>boolean</code> |
+
+
+#### PreloadOptions
+
+| Prop                  | Type                 |
+| --------------------- | -------------------- |
+| **`assetPath`**       | <code>string</code>  |
+| **`assetId`**         | <code>string</code>  |
+| **`volume`**          | <code>number</code>  |
+| **`audioChannelNum`** | <code>number</code>  |
+| **`isUrl`**           | <code>boolean</code> |
+
+</docgen-api>

@@ -36,18 +36,14 @@ public class NativeAudio: CAPPlugin {
         
         fadeMusic = fade
     }
-    
-    @objc func preloadSimple(_ call: CAPPluginCall) {
-        preloadAsset(call, isComplex: false)
-    }
-    
-    @objc func preloadComplex(_ call: CAPPluginCall) {
+
+    @objc func preload(_ call: CAPPluginCall) {
         preloadAsset(call, isComplex: true)
     }
     
     @objc func play(_ call: CAPPluginCall) {
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
-        
+        let time = call.getDouble("time") ?? 0
         if audioId != "" {
             let queue = DispatchQueue(label: "com.getcapacitor.community.audio.complex.queue", qos: .userInitiated)
             
@@ -60,9 +56,9 @@ public class NativeAudio: CAPPlugin {
                             let audioAsset = asset as? AudioAsset
                             
                             if self.fadeMusic {
-                                audioAsset?.playWithFade()
+                                audioAsset?.playWithFade(time: time)
                             } else {
-                                audioAsset?.play()
+                                audioAsset?.play(time: time)
                             }
                             
                             call.success()
@@ -119,12 +115,21 @@ public class NativeAudio: CAPPlugin {
     }
 
     @objc func resume(_ call: CAPPluginCall) {
-//        let audioId = call.getString(Constant.AssetIdKey) ?? ""
+        guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
+            return
+        }
+
+        audioAsset.resume()
         call.success()
     }
     
     @objc func pause(_ call: CAPPluginCall) {
-        call.success() // TODO: Implement pause
+        guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
+           return
+        }
+
+        audioAsset.pause()
+        call.success()
     }
     
     @objc func stop(_ call: CAPPluginCall) {
@@ -160,7 +165,7 @@ public class NativeAudio: CAPPlugin {
         call.success()
     }
     
-    @objc func setVoume(_ call: CAPPluginCall) {
+    @objc func setVolume(_ call: CAPPluginCall) {
         guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
             return
         }
@@ -168,6 +173,7 @@ public class NativeAudio: CAPPlugin {
         let volume = call.getFloat(Constant.Volume) ?? 1.0
         
         audioAsset.setVolume(volume: volume as NSNumber)
+        call.success()
     }
     
     private func preloadAsset(_ call: CAPPluginCall, isComplex complex: Bool) {
@@ -244,7 +250,7 @@ public class NativeAudio: CAPPlugin {
                     let audioAsset = asset as? AudioAsset
                     
                     if self.fadeMusic {
-                        audioAsset?.playWithFade()
+                        audioAsset?.playWithFade(time: audioAsset?.getCurrentTime() ?? 0)
                     } else {
                         audioAsset?.stop()
                     }

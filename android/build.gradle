@@ -33,6 +33,8 @@ android {
     }
     lintOptions {
         abortOnError false
+        disable "UnsafeExperimentalUsageError",
+                    "UnsafeExperimentalUsageWarning"
     }
 }
 

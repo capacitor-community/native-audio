@@ -131,20 +131,7 @@ public class NativeAudio
   }
 
   @PluginMethod
-  public void preloadSimple(final PluginCall call) {
-    new Thread(
-      new Runnable() {
-        @Override
-        public void run() {
-          preloadAsset(call);
-        }
-      }
-    )
-      .start();
-  }
-
-  @PluginMethod
-  public void preloadComplex(final PluginCall call) {
+  public void preload(final PluginCall call) {
     new Thread(
       new Runnable() {
         @Override
@@ -443,13 +430,14 @@ public class NativeAudio
       initSoundPool();
 
       final String audioId = call.getString(ASSET_ID);
-
+      final Double time = call.getDouble("time", 0.0);
       if (audioAssetList.containsKey(audioId)) {
         AudioAsset asset = audioAssetList.get(audioId);
         if (LOOP.equals(action) && asset != null) {
           asset.loop();
         } else if (asset != null) {
-          asset.play(
+
+          asset.play(time,
             new Callable<Void>() {
               @Override
               public Void call() throws Exception {

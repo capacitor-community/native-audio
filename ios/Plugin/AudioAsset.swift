@@ -68,17 +68,18 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
         return player.duration
     }
 
-    func play() {
+    func play(time: TimeInterval) {
         let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
-        player.currentTime = 0
+        player.currentTime = time
         player.numberOfLoops = 0
         player.play()
         playIndex = Int(truncating: NSNumber(value: playIndex + 1))
         playIndex = Int(truncating: NSNumber(value: playIndex % channels.count))
     }
     
-    func playWithFade() {
+    func playWithFade(time: TimeInterval) {
         let player: AVAudioPlayer! = channels.object(at: playIndex) as? AVAudioPlayer
+        player.currentTime = time
         
         if !player.isPlaying {
             player.numberOfLoops = 0
@@ -92,6 +93,18 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
             }
         }
         
+    }
+
+    func pause() {
+        let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
+        player.pause()
+    }
+
+    func resume() {
+        let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
+
+        let timeOffset = player.deviceCurrentTime + 0.01
+        player.play(atTime: timeOffset)
     }
     
     func stop() {
@@ -123,7 +136,6 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
         self.stop()
         
         let player: AVAudioPlayer! = channels.object(at: Int(playIndex)) as? AVAudioPlayer
-        player.currentTime = 0.0
         player.numberOfLoops = -1
         player.play()
         playIndex = Int(truncating: NSNumber(value: playIndex + 1))

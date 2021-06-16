@@ -44,11 +44,11 @@ public class AudioAsset {
     this.owner.dispatchComplete(this.assetId);
   }
 
-  public void play(Callable<Void> callback) throws Exception {
+  public void play(Double time, Callable<Void> callback) throws Exception {
     AudioDispatcher audio = audioList.get(playIndex);
 
     if (audio != null) {
-      audio.play(callback);
+      audio.play(time, callback);
       playIndex++;
       playIndex = playIndex % audioList.size();
     }

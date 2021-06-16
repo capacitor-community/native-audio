@@ -3,11 +3,13 @@ package com.getcapacitor.community.audio;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.os.Build;
+import android.os.SystemClock;
 import android.util.Log;
 import java.util.concurrent.Callable;
 
 public class AudioDispatcher
-  implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+  implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
   private final String TAG = "AudioDispatcher";
 
@@ -17,6 +19,7 @@ public class AudioDispatcher
   private final int PLAYING = 3;
   private final int PENDING_LOOP = 4;
   private final int LOOPING = 5;
+  private final int PAUSE = 6;
 
   private MediaPlayer mediaPlayer;
   private int mediaState;
@@ -34,6 +37,7 @@ public class AudioDispatcher
       assetFileDescriptor.getStartOffset(),
       assetFileDescriptor.getLength()
     );
+    mediaPlayer.setOnSeekCompleteListener(this);
     mediaPlayer.setAudioAttributes(
       new AudioAttributes.Builder()
         .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -56,13 +60,14 @@ public class AudioDispatcher
     return mediaPlayer.getCurrentPosition() / 1000.0;
   }
 
-  public void play(Callable<Void> callable) throws Exception {
-    invokePlay(false);
+  public void play(Double time, Callable<Void> callable) throws Exception {
+    invokePlay(time, false);
   }
 
   public boolean pause() throws Exception {
     if (mediaPlayer.isPlaying()) {
       mediaPlayer.pause();
+      mediaState = PAUSE;
       return true;
     }
 
@@ -86,7 +91,7 @@ public class AudioDispatcher
   }
 
   public void loop() throws Exception {
-    invokePlay(true);
+    mediaPlayer.setLooping(true);
   }
 
   public void unload() throws Exception {
@@ -120,17 +125,10 @@ public class AudioDispatcher
     try {
       if (mediaState == PENDING_PLAY) {
         mediaPlayer.setLooping(false);
-        mediaPlayer.seekTo(0);
-        mediaPlayer.start();
-        mediaState = PLAYING;
       } else if (mediaState == PENDING_LOOP) {
         mediaPlayer.setLooping(true);
-        mediaPlayer.seekTo(0);
-        mediaPlayer.start();
-        mediaState = PLAYING;
       } else {
         mediaState = PREPARED;
-        mediaPlayer.seekTo(0);
       }
     } catch (Exception ex) {
       Log.d(
@@ -141,30 +139,49 @@ public class AudioDispatcher
     }
   }
 
-  private void invokePlay(Boolean loop) {
+  private void seek(Double time) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      mediaPlayer.seekTo((int)(time * 1000), MediaPlayer.SEEK_NEXT_SYNC);
+    } else {
+      mediaPlayer.seekTo((int)(time * 1000));
+    }
+  }
+
+  private void invokePlay(Double time, Boolean loop) {
     try {
       boolean playing = mediaPlayer.isPlaying();
 
       if (playing) {
         mediaPlayer.pause();
         mediaPlayer.setLooping(loop);
-        mediaPlayer.seekTo(0);
-        mediaPlayer.start();
+        mediaState = PENDING_PLAY;
+        seek(time);
       }
-
-      if (!playing && mediaState == PREPARED) {
-        mediaState = (loop ? PENDING_LOOP : PENDING_PLAY);
-        onPrepared(mediaPlayer);
-      } else if (!playing) {
-        mediaState = (loop ? PENDING_LOOP : PENDING_PLAY);
-        mediaPlayer.setLooping(loop);
-        mediaPlayer.start();
+      else {
+        if (mediaState == PREPARED) {
+          mediaState = (loop ? PENDING_LOOP : PENDING_PLAY);
+          onPrepared(mediaPlayer);
+          seek(time);
+        } else {
+          mediaState = (loop ? PENDING_LOOP : PENDING_PLAY);
+          mediaPlayer.setLooping(loop);
+          seek(time);
+        }
       }
     } catch (Exception ex) {
       Log.d(
         TAG,
         "Caught exception while invoking audio: " + ex.getLocalizedMessage()
       );
+    }
+  }
+
+  @Override
+  public void onSeekComplete(MediaPlayer mp) {
+    if (mediaState == PENDING_PLAY || mediaState == PENDING_LOOP) {
+      Log.w("AudioDispatcher", "play " + mediaState);
+      mediaPlayer.start();
+      mediaState = PLAYING;
     }
   }
 }
