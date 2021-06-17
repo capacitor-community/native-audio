@@ -3,6 +3,11 @@
 Capacitor plugin for native audio engine.
 Capacitor v3 - ✅ Support!
 
+Click on video to see example 💥
+
+[![YouTube Example](https://img.youtube.com/vi/XpUGlWWtwHs/0.jpg)](https://www.youtube.com/watch?v=XpUGlWWtwHs)
+
+
 ## Maintainers
 
 | Maintainer    | GitHub                                      | Social                              |
