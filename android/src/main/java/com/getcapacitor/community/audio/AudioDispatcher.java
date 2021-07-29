@@ -92,6 +92,7 @@ public class AudioDispatcher
 
   public void loop() throws Exception {
     mediaPlayer.setLooping(true);
+    invokePlay(0.0, true);
   }
 
   public void unload() throws Exception {
