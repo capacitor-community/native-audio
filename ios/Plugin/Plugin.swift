@@ -42,6 +42,14 @@ public class NativeAudio: CAPPlugin {
     }
     
     @objc func play(_ call: CAPPluginCall) {
+        
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(AVAudioSession.Category.playback, options: .mixWithOthers)
+        } catch{
+            print("Couldnt set AudioSession")
+        }
+        
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         let time = call.getDouble("time") ?? 0
         if audioId != "" {
@@ -137,6 +145,9 @@ public class NativeAudio: CAPPlugin {
         
         do {
             try stopAudio(audioId: audioId)
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(AVAudioSession.Category.ambient, options: .mixWithOthers)
+            call.success()
         } catch {
             call.error(Constant.ErrorAssetNotFound)
         }
@@ -145,6 +156,13 @@ public class NativeAudio: CAPPlugin {
     @objc func loop(_ call: CAPPluginCall) {
         guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
             return
+        }
+        
+        do{
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(AVAudioSession.Category.playback, options: .mixWithOthers)
+        } catch{
+            print("Couldnt set AudioSession")
         }
         
         audioAsset.loop()
