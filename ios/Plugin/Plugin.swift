@@ -196,7 +196,7 @@ public class NativeAudio: CAPPlugin {
             if (complex) {
                 volume = call.getFloat("volume") ?? 1.0
                 channels = NSNumber(value: call.getInt("channels") ?? 1)
-                delay = NSNumber(value: call.getInt("delay") ?? 0)
+                delay = NSNumber(value: call.getInt("delay") ?? 1)
                 isUrl = call.getBool("isUrl") ?? false
             } else {
                 channels = 0
