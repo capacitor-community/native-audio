@@ -82,6 +82,8 @@ No configuration required for this plugin.
 | preloadSimple  | ✅      | ✅  | ❌  |
 | preloadComplex | ✅      | ✅  | ❌  |
 | play           | ✅      | ✅  | ❌  |
+| pause          | ✅      | ✅  | ❌  |
+| resume         | ✅      | ✅  | ❌  |
 | loop           | ✅      | ✅  | ❌  |
 | stop           | ✅      | ✅  | ❌  |
 | unload         | ✅      | ✅  | ❌  |
@@ -242,7 +244,19 @@ resume(options: { assetId: string; }) => Promise<void>
 | **`options`** | <code>{ assetId: string; }</code> |
 
 --------------------
+  
+  
+### pause(...)
 
+```typescript
+pause(options: { assetId: string; }) => Promise<void>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+--------------------
 
 ### loop(...)
 
