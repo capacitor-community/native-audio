@@ -233,19 +233,6 @@ play(options: { assetId: string; time: number; }) => Promise<void>
 --------------------
 
 
-### resume(...)
-
-```typescript
-resume(options: { assetId: string; }) => Promise<void>
-```
-
-| Param         | Type                              |
-| ------------- | --------------------------------- |
-| **`options`** | <code>{ assetId: string; }</code> |
-
---------------------
-  
-  
 ### pause(...)
 
 ```typescript
@@ -257,6 +244,20 @@ pause(options: { assetId: string; }) => Promise<void>
 | **`options`** | <code>{ assetId: string; }</code> |
 
 --------------------
+
+
+### resume(...)
+
+```typescript
+resume(options: { assetId: string; }) => Promise<void>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+--------------------
+
 
 ### loop(...)
 
