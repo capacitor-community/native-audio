@@ -68,15 +68,15 @@ public class NativeAudio: CAPPlugin {
                                 audioAsset?.play(time: time)
                             }
 
-                            call.success()
+                            call.resolve()
                         } else if (asset is Int32) {
                             let audioAsset = asset as? NSNumber ?? 0
 
                             AudioServicesPlaySystemSound(SystemSoundID(audioAsset.intValue ))
 
-                            call.success()
+                            call.resolve()
                         } else {
-                            call.error(Constant.ErrorAssetNotFound)
+                            call.reject(Constant.ErrorAssetNotFound)
                         }
                     }
                 }
@@ -87,7 +87,7 @@ public class NativeAudio: CAPPlugin {
     @objc private func getAudioAsset(_ call: CAPPluginCall) -> AudioAsset? {
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         if audioId == "" {
-            call.error(Constant.ErrorAssetId)
+            call.reject(Constant.ErrorAssetId)
             return nil
         }
         if self.audioList.count > 0 {
@@ -96,7 +96,7 @@ public class NativeAudio: CAPPlugin {
                 return asset as? AudioAsset
             }
         }
-        call.error(Constant.ErrorAssetNotFound + " - " + audioId)
+        call.reject(Constant.ErrorAssetNotFound + " - " + audioId)
         return nil
     }
 
@@ -145,7 +145,7 @@ public class NativeAudio: CAPPlugin {
         do {
             try stopAudio(audioId: audioId)
         } catch {
-            call.error(Constant.ErrorAssetNotFound)
+            call.reject(Constant.ErrorAssetNotFound)
         }
     }
 
@@ -241,7 +241,7 @@ public class NativeAudio: CAPPlugin {
                             call.success()
                         }
                     } else {
-                        call.error(Constant.ErrorAssetPath + " - " + assetPath)
+                        call.reject(Constant.ErrorAssetPath + " - " + assetPath)
                     }
                 }
             }
