@@ -345,6 +345,33 @@ public class NativeAudio
     }
   }
 
+  @PluginMethod
+  public void isPlaying(final PluginCall call) {
+    try {
+      initSoundPool();
+
+      String audioId = call.getString(ASSET_ID);
+
+      if (!isStringValid(audioId)) {
+        call.reject(ERROR_AUDIO_ID_MISSING + " - " + audioId);
+        return;
+      }
+
+      if (audioAssetList.containsKey(audioId)) {
+        AudioAsset asset = audioAssetList.get(audioId);
+        if (asset != null) {
+          call.resolve(
+                  new JSObject().put("isPlaying", asset.isPlaying())
+          );
+        }
+      } else {
+        call.reject(ERROR_AUDIO_ASSET_MISSING + " - " + audioId);
+      }
+    } catch (Exception ex) {
+      call.reject(ex.getMessage());
+    }
+  }
+
   public void dispatchComplete(String assetId) {
     JSObject ret = new JSObject();
     ret.put("assetId", assetId);
