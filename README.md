@@ -42,6 +42,8 @@ Andoid: `android/app/src/assets`
 
 iOS: `ios/App/App/sounds`
 
+Web: `assets/sounds`
+
 ## Installation
 
 To use npm
@@ -62,7 +64,7 @@ Sync native files
 npx cap sync
 ```
 
-On iOS and Android, no further steps are needed.
+On iOS, Android and Web, no further steps are needed.
 
 ## Configuration
 
@@ -79,17 +81,17 @@ No configuration required for this plugin.
 | Name           | Android | iOS | Web |
 | :------------- | :------ | :-- | :-- |
 | configure      | ✅      | ✅  | ❌  |
-| preload        | ✅      | ✅  | ❌  |
-| play           | ✅      | ✅  | ❌  |
-| pause          | ✅      | ✅  | ❌  |
-| resume         | ✅      | ✅  | ❌  |
-| loop           | ✅      | ✅  | ❌  |
-| stop           | ✅      | ✅  | ❌  |
-| unload         | ✅      | ✅  | ❌  |
-| setVolume      | ✅      | ✅  | ❌  |
-| getDuration    | ✅      | ✅  | ❌  |
-| getCurrentTime | ✅      | ✅  | ❌  |
-| isPlaying      | ✅      | ✅  | ❌  |
+| preload        | ✅      | ✅  | ✅  |
+| play           | ✅      | ✅  | ✅  |
+| pause          | ✅      | ✅  | ✅  |
+| resume         | ✅      | ✅  | ✅  |
+| loop           | ✅      | ✅  | ✅  |
+| stop           | ✅      | ✅  | ✅  |
+| unload         | ✅      | ✅  | ✅  |
+| setVolume      | ✅      | ✅  | ✅  |
+| getDuration    | ✅      | ✅  | ✅  |
+| getCurrentTime | ✅      | ✅  | ✅  |
+| isPlaying      | ✅      | ✅  | ✅  |
 
 ## Usage
 

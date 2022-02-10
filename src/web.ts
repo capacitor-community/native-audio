@@ -1,67 +1,134 @@
 import { WebPlugin } from '@capacitor/core';
-
-
-
-import { NativeAudio } from "./definitions";
+import { AudioAsset } from './audio-asset';
 import type {
   ConfigureOptions,
-  PreloadOptions,
-} from "./definitions";
+  PreloadOptions
+} from './definitions';
+import { NativeAudio } from './definitions';
 
 export class NativeAudioWeb extends WebPlugin implements NativeAudio {
+  private static readonly FILE_LOCATION: string = 'assets/sounds';
+  private static readonly AUDIO_ASSET_BY_ASSET_ID: Map<string, AudioAsset> = new Map<string, AudioAsset>();
+
   constructor() {
     super({
-      name: "NativeAudio",
-      platforms: ["web"],
+      name: 'NativeAudio',
+      platforms: ['web'],
     });
   }
-  resume (options: { assetId: string; }): Promise<void> {
-    console.log(options)
-    throw new Error('Method not implemented.');
+
+  async resume(options: { assetId: string; }): Promise<void> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    if (audio.paused) {
+      return audio.play();
+    }
   }
-  pause (options: { assetId: string; }): Promise<void> {
-    console.log(options)
-    throw new Error('Method not implemented.');
+
+  async pause(options: { assetId: string; }): Promise<void> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    return audio.pause();
   }
-  getCurrentTime (options: { assetId: string; time: number }): Promise<{ currentTime: number; }> {
-    console.log(options)
-    throw new Error('Method not implemented.');
+
+  async getCurrentTime(options: { assetId: string }): Promise<{ currentTime: number; }> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    return { currentTime: audio.currentTime };
   }
-  getDuration (options: { assetId: string; }): Promise<{ duration: number; }> {
-    console.log(options);
-    throw new Error('Method not implemented.');
+
+  async getDuration(options: { assetId: string; }): Promise<{ duration: number; }> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    if (Number.isNaN(audio.duration)) {
+      throw 'no duration available';
+    }
+    if (!Number.isFinite(audio.duration)) {
+      throw 'duration not available => media resource is streaming';
+    }
+    return { duration: audio.duration };
   }
-  configure(options: ConfigureOptions): Promise<void> {
-    console.log(options);
-    throw new Error("Method not implemented.");
+
+  async configure(options: ConfigureOptions): Promise<void> {
+    throw `configure is not supported for web: ${JSON.stringify(options)}`;
   }
-  preload(options: PreloadOptions): Promise<void> {
-    console.log(options);
-    throw new Error("Method not implemented.");
+
+  async preload(options: PreloadOptions): Promise<void> {
+    if (NativeAudioWeb.AUDIO_ASSET_BY_ASSET_ID.has(options.assetId)) {
+      throw 'AssetId already exists. Unload first if like to change!';
+    }
+    if (!options.assetPath?.length) {
+      throw 'no assetPath provided';
+    }
+    if (!options.isUrl && !new RegExp('^/?' + NativeAudioWeb.FILE_LOCATION).test(options.assetPath)) {
+      const slashPrefix: string = options.assetPath.startsWith('/') ? '' : '/';
+      options.assetPath = `${NativeAudioWeb.FILE_LOCATION}${slashPrefix}${options.assetPath}`;
+    }
+    const audio: HTMLAudioElement = new Audio(options.assetPath);
+    audio.autoplay = false;
+    audio.loop = false;
+    audio.preload = 'auto';
+    if (options.volume) {
+      audio.volume = options.volume;
+    }
+    NativeAudioWeb.AUDIO_ASSET_BY_ASSET_ID.set(options.assetId, new AudioAsset(audio));
   }
-  play(options: { assetId: string }): Promise<void> {
-    console.log(options);
-    throw new Error("Method not implemented.");
+
+  async play(options: { assetId: string, time?: number }): Promise<void> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    await this.stop(options);
+    audio.loop = false;
+    audio.currentTime = options.time ?? 0;
+    return audio.play();
   }
-  loop(options: { assetId: string }): Promise<void> {
-    console.log(options);
-    throw new Error("Method not implemented.");
+
+  async loop(options: { assetId: string }): Promise<void> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    await this.stop(options);
+    audio.loop = true;
+    return audio.play();
   }
-  stop(options: { assetId: string }): Promise<void> {
-    console.log(options);
-    throw new Error("Method not implemented.");
+
+  async stop(options: { assetId: string }): Promise<void> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    audio.pause();
+    audio.loop = false;
+    audio.currentTime = 0;
   }
-  unload(options: { assetId: string }): Promise<void> {
-    console.log(options);
-    throw new Error("Method not implemented.");
+
+  async unload(options: { assetId: string }): Promise<void> {
+    await this.stop(options);
+    NativeAudioWeb.AUDIO_ASSET_BY_ASSET_ID.delete(options.assetId);
   }
-  setVolume(options: { assetId: string }): Promise<void> {
-    console.log(options);
-    throw new Error("Method not implemented.");
+
+  async setVolume(options: { assetId: string, volume: number }): Promise<void> {
+    if (typeof options?.volume !== 'number') {
+      throw 'no volume provided';
+    }
+
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    audio.volume = options.volume;
   }
-  isPlaying(options: { assetId: string }): Promise<{ isPlaying: boolean; }> {
-    console.log(options)
-    throw new Error('Method not implemented.');
+
+  async isPlaying(options: { assetId: string }): Promise<{ isPlaying: boolean; }> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    return { isPlaying: !audio.paused };
+  }
+
+  private getAudioAsset(assetId: string): AudioAsset {
+    this.checkAssetId(assetId);
+
+    if (!NativeAudioWeb.AUDIO_ASSET_BY_ASSET_ID.has(assetId)) {
+      throw `no asset for assetId "${assetId}" available. Call preload first!`;
+    }
+
+    return NativeAudioWeb.AUDIO_ASSET_BY_ASSET_ID.get(assetId) as AudioAsset;
+  }
+
+  private checkAssetId(assetId: string): void {
+    if (typeof assetId !== 'string') {
+      throw 'assetId must be a string';
+    }
+
+    if (!assetId?.length) {
+      throw 'no assetId provided';
+    }
   }
 }
 
