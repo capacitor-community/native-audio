@@ -79,8 +79,7 @@ No configuration required for this plugin.
 | Name           | Android | iOS | Web |
 | :------------- | :------ | :-- | :-- |
 | configure      | ✅      | ✅  | ❌  |
-| preloadSimple  | ✅      | ✅  | ❌  |
-| preloadComplex | ✅      | ✅  | ❌  |
+| preload        | ✅      | ✅  | ❌  |
 | play           | ✅      | ✅  | ❌  |
 | pause          | ✅      | ✅  | ❌  |
 | resume         | ✅      | ✅  | ❌  |
