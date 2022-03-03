@@ -79,9 +79,10 @@ No configuration required for this plugin.
 | Name           | Android | iOS | Web |
 | :------------- | :------ | :-- | :-- |
 | configure      | ✅      | ✅  | ❌  |
-| preloadSimple  | ✅      | ✅  | ❌  |
-| preloadComplex | ✅      | ✅  | ❌  |
+| preload        | ✅      | ✅  | ❌  |
 | play           | ✅      | ✅  | ❌  |
+| pause          | ✅      | ✅  | ❌  |
+| resume         | ✅      | ✅  | ❌  |
 | loop           | ✅      | ✅  | ❌  |
 | stop           | ✅      | ✅  | ❌  |
 | unload         | ✅      | ✅  | ❌  |
@@ -227,6 +228,19 @@ play(options: { assetId: string; time: number; }) => Promise<void>
 | Param         | Type                                            |
 | ------------- | ----------------------------------------------- |
 | **`options`** | <code>{ assetId: string; time: number; }</code> |
+
+--------------------
+
+
+### pause(...)
+
+```typescript
+pause(options: { assetId: string; }) => Promise<void>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
 
 --------------------
 
