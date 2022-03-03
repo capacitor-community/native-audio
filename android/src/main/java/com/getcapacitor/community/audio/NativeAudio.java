@@ -57,11 +57,13 @@ public class NativeAudio
     this.audioManager = (AudioManager) getBridge()
       .getActivity()
       .getSystemService(Context.AUDIO_SERVICE);
-    this.audioManager.requestAudioFocus(
-      this,
-      AudioManager.STREAM_MUSIC,
-      AudioManager.AUDIOFOCUS_GAIN
-    );
+    if (this.audioManager != null) {
+      this.audioManager.requestAudioFocus(
+        this,
+        AudioManager.STREAM_MUSIC,
+        AudioManager.AUDIOFOCUS_GAIN
+      );
+    }
   }
 
   @Override
