@@ -347,8 +347,8 @@ getDuration(options: { assetId: string; }) => Promise<{ duration: number; }>
 
 | Prop       | Type                 | Description          |
 | ---------- | -------------------- | -------------------- |
-| **`fade`** | <code>boolean</code> | 
-| **`focus`** | <code>boolean</code> | A bool indicating whether or not to disable mixed audio. By default - <code>false</code>
+| **`fade`** | <code>boolean</code> | A bool indicating whether or not to fade audio. By default - <code>true</code>
+| **`focus`** | <code>boolean</code> | A bool indicating whether or not to disable mixed audio. By default - <code>true</code>
 
 
 #### PreloadOptions

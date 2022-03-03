@@ -57,6 +57,11 @@ public class NativeAudio
     this.audioManager = (AudioManager) getBridge()
       .getActivity()
       .getSystemService(Context.AUDIO_SERVICE);
+    this.audioManager.requestAudioFocus(
+      this,
+      AudioManager.STREAM_MUSIC,
+      AudioManager.AUDIOFOCUS_GAIN
+    );
   }
 
   @Override
@@ -124,11 +129,15 @@ public class NativeAudio
       call.getBoolean(OPT_FADE_MUSIC);
 
     if (call.hasOption(OPT_FOCUS_AUDIO) && this.audioManager != null) {
-      this.audioManager.requestAudioFocus(
-              this,
-              AudioManager.STREAM_MUSIC,
-              AudioManager.AUDIOFOCUS_GAIN
-      );
+      if (call.getBoolean(OPT_FOCUS_AUDIO)) {
+        this.audioManager.requestAudioFocus(
+          this,
+          AudioManager.STREAM_MUSIC,
+          AudioManager.AUDIOFOCUS_GAIN
+        );
+      } else {
+        this.audioManager.abandonAudioFocus(this);
+      }
     }
   }
 
