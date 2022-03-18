@@ -174,7 +174,7 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
 
     func isPlaying() -> Bool {
         if channels.count != 1 {
-            return 0
+            return false
         }
 
         let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
