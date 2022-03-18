@@ -59,6 +59,10 @@ export class NativeAudioWeb extends WebPlugin implements NativeAudio {
     console.log(options);
     throw new Error("Method not implemented.");
   }
+  isPlaying(options: { assetId: string }): Promise<{ isPlaying: boolean; }> {
+    console.log(options)
+    throw new Error('Method not implemented.');
+  }
 }
 
 const NativeAudio = new NativeAudioWeb();
