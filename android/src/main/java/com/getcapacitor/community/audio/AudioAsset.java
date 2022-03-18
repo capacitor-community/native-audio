@@ -140,4 +140,11 @@ public class AudioAsset {
       }
     }
   }
+
+  public boolean isPlaying() throws Exception {
+    if (audioList.size() != 1) return false;
+
+    return audioList.get(playIndex).isPlaying();
+  }
+
 }

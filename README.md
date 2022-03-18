@@ -89,6 +89,7 @@ No configuration required for this plugin.
 | setVolume      | ✅      | ✅  | ❌  |
 | getDuration    | ✅      | ✅  | ❌  |
 | getCurrentTime | ✅      | ✅  | ❌  |
+| isPlaying      | ✅      | ✅  | ❌  |
 
 ## Usage
 
@@ -183,6 +184,18 @@ NativeAudio.getCurrentTime({
 });
 .then(result => {
   console.log(result.currentTime);
+})
+
+/**
+ * This method will return false if audio is paused or not loaded.
+ * @param assetId - identifier of the asset
+ * @returns {isPlaying: boolean}
+ */
+NativeAudio.isPlaying({
+  assetId: 'fire'
+})
+.then(result => {
+  console.log(result.isPlaying);
 })
 ```
 
@@ -336,6 +349,21 @@ getDuration(options: { assetId: string; }) => Promise<{ duration: number; }>
 | **`options`** | <code>{ assetId: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ duration: number; }&gt;</code>
+
+--------------------
+
+
+### isPlaying(...)
+
+```typescript
+isPlaying(options: { assetId: string; }) => Promise<{ isPlaying: boolean; }>
+```
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ assetId: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ isPlaying: boolean; }&gt;</code>
 
 --------------------
 

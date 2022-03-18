@@ -182,7 +182,17 @@ public class NativeAudio: CAPPlugin {
         audioAsset.setVolume(volume: volume as NSNumber)
         call.resolve()
     }
+  
+    @objc func isPlaying(_ call: CAPPluginCall) {
+        guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
+            return
+        }
 
+        call.resolve([
+            "isPlaying": audioAsset.isPlaying()
+        ])
+    }
+  
     private func preloadAsset(_ call: CAPPluginCall, isComplex complex: Bool) {
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         let channels: NSNumber?

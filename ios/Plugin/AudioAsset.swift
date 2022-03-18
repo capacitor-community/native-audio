@@ -171,4 +171,14 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
     func playerDecodeError(player: AVAudioPlayer!, error: NSError!) {
         
     }
+
+    func isPlaying() -> Bool {
+        if channels.count != 1 {
+            return false
+        }
+
+        let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
+
+        return player.isPlaying
+    }
 }

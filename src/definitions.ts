@@ -12,6 +12,9 @@ export interface NativeAudio {
     assetId: string;
   }): Promise<{ currentTime: number }>;
   getDuration(options: { assetId: string }): Promise<{ duration: number }>;
+  isPlaying(options: {
+    assetId: string;
+  }): Promise<{ isPlaying: boolean }>;
 }
 
 export interface ConfigureOptions {

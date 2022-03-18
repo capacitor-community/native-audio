@@ -184,4 +184,8 @@ public class AudioDispatcher
       mediaState = PLAYING;
     }
   }
+
+  public boolean isPlaying() throws Exception {
+    return mediaPlayer.isPlaying();
+  }
 }
