@@ -238,6 +238,8 @@ public class NativeAudio
           if (wasPlaying) {
             resumeList.add(asset);
           }
+
+          call.resolve();
         }
       } else {
         call.reject(ERROR_ASSET_NOT_LOADED + " - " + audioId);
@@ -258,6 +260,7 @@ public class NativeAudio
         if (asset != null) {
           asset.resume();
           resumeList.add(asset);
+          call.resolve();
         }
       } else {
         call.reject(ERROR_ASSET_NOT_LOADED + " - " + audioId);
@@ -277,6 +280,7 @@ public class NativeAudio
         AudioAsset asset = audioAssetList.get(audioId);
         if (asset != null) {
           asset.stop();
+          call.resolve();
         }
       } else {
         call.reject(ERROR_ASSET_NOT_LOADED + " - " + audioId);
@@ -337,6 +341,7 @@ public class NativeAudio
         AudioAsset asset = audioAssetList.get(audioId);
         if (asset != null) {
           asset.setVolume(volume);
+          call.resolve();
         }
       } else {
         call.reject(ERROR_AUDIO_ASSET_MISSING);
