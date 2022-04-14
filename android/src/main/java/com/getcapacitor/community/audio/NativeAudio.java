@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import com.getcapacitor.JSObject;
@@ -427,9 +428,13 @@ public class NativeAudio
           );
           assetFileDescriptor = new AssetFileDescriptor(p, 0, -1);
         } else {
-          Context ctx = getBridge().getActivity().getApplicationContext();
-          AssetManager am = ctx.getResources().getAssets();
-          assetFileDescriptor = am.openFd(fullPath);
+          if (fullPath.startsWith("content")) {
+            assetFileDescriptor = getBridge().getActivity().getContentResolver().openAssetFileDescriptor(Uri.parse(fullPath), "r");
+          } else {
+            Context ctx = getBridge().getActivity().getApplicationContext();
+            AssetManager am = ctx.getResources().getAssets();
+            assetFileDescriptor = am.openFd(fullPath);
+          }
         }
 
         AudioAsset asset = new AudioAsset(
