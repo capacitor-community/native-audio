@@ -137,6 +137,7 @@ public class NativeAudio: CAPPlugin {
         
         do {
             try stopAudio(audioId: audioId)
+            call.resolve()
         } catch {
             call.reject(Constant.ErrorAssetNotFound)
         }
