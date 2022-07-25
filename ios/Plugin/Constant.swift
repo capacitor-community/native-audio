@@ -16,4 +16,5 @@ public class Constant {
     public static let ErrorAssetId = "Asset Id is missing"
     public static let ErrorAssetPath = "Asset Path is missing"
     public static let ErrorAssetNotFound = "Asset is not loaded"
+    public static let ErrorAssetExists = "Audio Asset already exists"
 }
