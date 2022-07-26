@@ -245,6 +245,8 @@ public class NativeAudio: CAPPlugin {
                     } else {
                         call.reject(Constant.ErrorAssetPath + " - " + assetPath)
                     }
+                } else {
+                    call.reject(Constant.ErrorAssetExists)
                 }
             }
         }
