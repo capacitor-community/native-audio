@@ -10,6 +10,7 @@ import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_EXISTS;
 import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_ID_MISSING;
 import static com.getcapacitor.community.audio.Constant.LOOP;
 import static com.getcapacitor.community.audio.Constant.OPT_FADE_MUSIC;
+import static com.getcapacitor.community.audio.Constant.OPT_FOCUS_AUDIO;
 import static com.getcapacitor.community.audio.Constant.VOLUME;
 
 import android.Manifest;
@@ -48,17 +49,17 @@ public class NativeAudio
   private static HashMap<String, AudioAsset> audioAssetList;
   private static ArrayList<AudioAsset> resumeList;
   private boolean fadeMusic = false;
+  private AudioManager audioManager;
 
   @Override
   public void load() {
     super.load();
 
-    AudioManager audioManager = (AudioManager) getBridge()
+    this.audioManager = (AudioManager) getBridge()
       .getActivity()
       .getSystemService(Context.AUDIO_SERVICE);
-
-    if (audioManager != null) {
-      int result = audioManager.requestAudioFocus(
+    if (this.audioManager != null) {
+      this.audioManager.requestAudioFocus(
         this,
         AudioManager.STREAM_MUSIC,
         AudioManager.AUDIOFOCUS_GAIN
@@ -129,6 +130,18 @@ public class NativeAudio
 
     if (call.hasOption(OPT_FADE_MUSIC)) this.fadeMusic =
       call.getBoolean(OPT_FADE_MUSIC);
+
+    if (call.hasOption(OPT_FOCUS_AUDIO) && this.audioManager != null) {
+      if (call.getBoolean(OPT_FOCUS_AUDIO)) {
+        this.audioManager.requestAudioFocus(
+          this,
+          AudioManager.STREAM_MUSIC,
+          AudioManager.AUDIOFOCUS_GAIN
+        );
+      } else {
+        this.audioManager.abandonAudioFocus(this);
+      }
+    }
   }
 
   @PluginMethod
