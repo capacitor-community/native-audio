@@ -24,7 +24,7 @@ public class NativeAudio: CAPPlugin {
         self.fadeMusic = false
 
         do {
-            try self.session.setCategory(AVAudioSession.Category.playback)
+            try self.session.setCategory(AVAudioSession.Category.playback, options: .mixWithOthers)
             try self.session.setActive(false)
         } catch {
             print("Failed to set session category")
@@ -38,7 +38,7 @@ public class NativeAudio: CAPPlugin {
         if let focus = call.getBool(Constant.FocusAudio) {
             do {
                 if focus {
-                    try self.session.setCategory(AVAudioSession.Category.playback)
+                    try self.session.setCategory(AVAudioSession.Category.playback, options: .mixWithOthers)
                 } else {
                     try self.session.setCategory(AVAudioSession.Category.ambient)
                 }
