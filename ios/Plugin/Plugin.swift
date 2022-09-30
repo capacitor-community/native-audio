@@ -40,7 +40,7 @@ public class NativeAudio: CAPPlugin {
                 if focus {
                     try self.session.setCategory(AVAudioSession.Category.playback)
                 } else {
-                    try self.session.setCategory(AVAudioSession.Category.ambient)
+                    try self.session.setCategory(AVAudioSession.Category.playback, options: .mixWithOthers)
                 }
             } catch {
                 print("Failed to set setCategory audio")
