@@ -16,7 +16,7 @@ jobs:
       - name: Install yarn
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Install deps
         run: yarn install
