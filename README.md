@@ -2,7 +2,7 @@
 <h3 align="center">Native Audio</h3>
 <p align="center"><strong><code>@capacitor-community/native-audio</code></strong></p>
 <p align="center">
-  Capacitor community plugin for playing sounds.
+  Capacitor community plugin for playing sounds natively.
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 # Capacitor Native Audio Plugin
 
 Capacitor plugin for native audio engine.
-Capacitor v3 - ✅ Support!
+Capacitor v5 - ✅ Support!
 
 Click on video to see example 💥
 
@@ -375,10 +375,10 @@ isPlaying(options: { assetId: string; }) => Promise<{ isPlaying: boolean; }>
 
 #### ConfigureOptions
 
-| Prop        | Type                 |
-| ----------- | -------------------- |
-| **`fade`**  | <code>boolean</code> |
-| **`focus`** | <code>boolean</code> |
+| Prop        | Type                 | Description                                       | Default           |
+| ----------- | -------------------- | ------------------------------------------------- | ----------------- |
+| **`fade`**  | <code>boolean</code> | indicating whether or not to fade audio.          | <code>true</code> |
+| **`focus`** | <code>boolean</code> | indicating whether or not to disable mixed audio. | <code>true</code> |
 
 
 #### PreloadOptions
