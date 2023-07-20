@@ -5,6 +5,7 @@
 # node files
 dist/
 node_modules/
+package-lock.json
 
 # iOS files
 Pods
