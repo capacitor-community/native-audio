@@ -2,7 +2,7 @@
 <h3 align="center">Native Audio</h3>
 <p align="center"><strong><code>@capacitor-community/native-audio</code></strong></p>
 <p align="center">
-  Capacitor community plugin for playing sounds nativly.
+  Capacitor community plugin for playing sounds natively.
 </p>
 
 <p align="center">
