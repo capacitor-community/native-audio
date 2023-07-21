@@ -10,13 +10,6 @@ export class NativeAudioWeb extends WebPlugin implements NativeAudio {
   private static readonly FILE_LOCATION: string = 'assets/sounds';
   private static readonly AUDIO_ASSET_BY_ASSET_ID: Map<string, AudioAsset> = new Map<string, AudioAsset>();
 
-  constructor() {
-    super({
-      name: 'NativeAudio',
-      platforms: ['web'],
-    });
-  }
-
   async resume(options: { assetId: string; }): Promise<void> {
     const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
     if (audio.paused) {
@@ -131,8 +124,4 @@ export class NativeAudioWeb extends WebPlugin implements NativeAudio {
     }
   }
 }
-
-const NativeAudio = new NativeAudioWeb();
-
-export { NativeAudio };
 
