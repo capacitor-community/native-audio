@@ -488,14 +488,10 @@ public class NativeAudio
         } else if (asset != null) {
 
           asset.play(time,
-            new Callable<Void>() {
-              @Override
-              public Void call() throws Exception {
-                call.resolve(new JSObject().put(ASSET_ID, audioId));
-
-                return null;
-              }
-            }
+                  () -> {
+                    call.resolve();
+                    return null;
+                  }
           );
         }
       }
