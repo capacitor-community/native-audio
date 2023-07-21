@@ -376,7 +376,7 @@ isPlaying(options: { assetId: string; }) => Promise<{ isPlaying: boolean; }>
 addListener(eventName: "complete", listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-Listen for audio finished playing
+Listen for audio completed playing an asset
 
 | Param              | Type                                                  |
 | ------------------ | ----------------------------------------------------- |
