@@ -62,6 +62,7 @@ public class AudioDispatcher
 
   public void play(Double time, Callable<Void> callable) throws Exception {
     invokePlay(time, false);
+    callable.call();
   }
 
   public boolean pause() throws Exception {
