@@ -1,6 +1,6 @@
 {
   "name": "@capacitor-community/native-audio",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "A native plugin for native audio engine",
   "main": "dist/plugin.js",
   "module": "dist/esm/index.js",
