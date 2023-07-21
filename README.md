@@ -237,12 +237,12 @@ preload(options: PreloadOptions) => Promise<void>
 ### play(...)
 
 ```typescript
-play(options: { assetId: string; time: number; }) => Promise<void>
+play(options: { assetId: string; time?: number; }) => Promise<void>
 ```
 
-| Param         | Type                                            |
-| ------------- | ----------------------------------------------- |
-| **`options`** | <code>{ assetId: string; time: number; }</code> |
+| Param         | Type                                             |
+| ------------- | ------------------------------------------------ |
+| **`options`** | <code>{ assetId: string; time?: number; }</code> |
 
 --------------------
 
@@ -370,6 +370,26 @@ isPlaying(options: { assetId: string; }) => Promise<{ isPlaying: boolean; }>
 --------------------
 
 
+### addListener('complete', ...)
+
+```typescript
+addListener(eventName: "complete", listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for audio finished playing
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'complete'</code>                               |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 5.0.1
+
+--------------------
+
+
 ### Interfaces
 
 
@@ -390,5 +410,12 @@ isPlaying(options: { assetId: string; }) => Promise<{ isPlaying: boolean; }>
 | **`volume`**          | <code>number</code>  |
 | **`audioChannelNum`** | <code>number</code>  |
 | **`isUrl`**           | <code>boolean</code> |
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 </docgen-api>
