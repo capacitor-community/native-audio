@@ -1,3 +1,5 @@
+import type { PluginListenerHandle } from "@capacitor/core";
+
 export interface NativeAudio {
   configure(options: ConfigureOptions): Promise<void>;
   preload(options: PreloadOptions): Promise<void>;
@@ -15,6 +17,12 @@ export interface NativeAudio {
   isPlaying(options: {
     assetId: string;
   }): Promise<{ isPlaying: boolean }>;
+  /**
+   * Listen for asset completed playing event
+   *
+   * @since 5.0.1
+   */
+  addListener(eventName: "complete", listenerFunc: (event: {assetId: string}) => void): Promise<PluginListenerHandle> & PluginListenerHandle;
 }
 
 export interface ConfigureOptions {
