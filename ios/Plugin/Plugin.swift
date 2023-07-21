@@ -14,11 +14,11 @@ enum MyError: Error {
 @objc(NativeAudio)
 public class NativeAudio: CAPPlugin {
 
-    var audioList: [String : Any] = [:]
+    var audioList: [String: Any] = [:]
     var fadeMusic = false
     var session = AVAudioSession.sharedInstance()
 
-    public override func load() {
+    override public func load() {
         super.load()
 
         self.fadeMusic = false
@@ -72,7 +72,7 @@ public class NativeAudio: CAPPlugin {
                                 audioAsset?.play(time: time)
                             }
                             call.resolve()
-                        } else if (asset is Int32) {
+                        } else if asset is Int32 {
                             let audioAsset = asset as? NSNumber ?? 0
                             AudioServicesPlaySystemSound(SystemSoundID(audioAsset.intValue ))
                             call.resolve()
@@ -100,7 +100,6 @@ public class NativeAudio: CAPPlugin {
         call.reject(Constant.ErrorAssetNotFound + " - " + audioId)
         return nil
     }
-
 
     @objc func getDuration(_ call: CAPPluginCall) {
         guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
@@ -166,7 +165,7 @@ public class NativeAudio: CAPPlugin {
             let asset = self.audioList[audioId]
             if asset != nil && asset is AudioAsset {
                 let audioAsset = asset as! AudioAsset
-                audioAsset.unload();
+                audioAsset.unload()
                 self.audioList[audioId] = nil
             }
         }
@@ -183,7 +182,7 @@ public class NativeAudio: CAPPlugin {
         audioAsset.setVolume(volume: volume as NSNumber)
         call.resolve()
     }
-  
+
     @objc func isPlaying(_ call: CAPPluginCall) {
         guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
             return
@@ -193,7 +192,7 @@ public class NativeAudio: CAPPlugin {
             "isPlaying": audioAsset.isPlaying()
         ])
     }
-  
+
     private func preloadAsset(_ call: CAPPluginCall, isComplex complex: Bool) {
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         let channels: NSNumber?
@@ -204,7 +203,7 @@ public class NativeAudio: CAPPlugin {
         if audioId != "" {
             let assetPath: String = call.getString(Constant.AssetPathKey) ?? ""
 
-            if (complex) {
+            if complex {
                 volume = call.getFloat("volume") ?? 1.0
                 channels = NSNumber(value: call.getInt("channels") ?? 1)
                 delay = NSNumber(value: call.getInt("delay") ?? 1)
