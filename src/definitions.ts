@@ -18,7 +18,7 @@ export interface NativeAudio {
     assetId: string;
   }): Promise<{ isPlaying: boolean }>;
   /**
-   * Listen for asset completed playing
+   * Listen for asset completed playing event
    *
    * @since 5.0.1
    */
