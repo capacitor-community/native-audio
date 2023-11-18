@@ -121,6 +121,8 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                 this.audioManager.abandonAudioFocus(this);
             }
         }
+
+        call.resolve();
     }
 
     @PluginMethod
