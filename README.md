@@ -91,6 +91,7 @@ No configuration required for this plugin.
 | setVolume      | ✅      | ✅  | ✅  |
 | getDuration    | ✅      | ✅  | ✅  |
 | getCurrentTime | ✅      | ✅  | ✅  |
+| setCurrentTime | ✅      | ✅  | ✅  |
 | isPlaying      | ✅      | ✅  | ✅  |
 
 ## Usage
@@ -187,6 +188,15 @@ NativeAudio.getCurrentTime({
 .then(result => {
   console.log(result.currentTime);
 })
+
+/**
+ * this method will set the new current time of a playing audio file.
+ * only works if channels == 1
+ */
+NativeAudio.setCurrentTime({
+  assetId: 'fire',
+  time: 60.0
+});
 
 /**
  * This method will return false if audio is paused or not loaded.
