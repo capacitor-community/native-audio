@@ -18,10 +18,7 @@ export interface NativeAudio {
    *
    * @since 5.0.1
    */
-  addListener(
-    eventName: 'complete',
-    listenerFunc: (event: { assetId: string }) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  addListener(eventName: 'complete', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
 }
 
 export interface ConfigureOptions {
