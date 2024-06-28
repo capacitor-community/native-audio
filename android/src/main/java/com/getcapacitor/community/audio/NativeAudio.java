@@ -344,8 +344,8 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
     }
 
     private void preloadAsset(PluginCall call) {
-        double volume = 1.0;
-        int audioChannelNum = 1;
+        double volume = call.getDouble(VOLUME, 1.0);
+        int audioChannelNum = call.getInt(AUDIO_CHANNEL_NUM, 1);
 
         try {
             initSoundPool();
@@ -368,18 +368,6 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                 }
 
                 String fullPath = assetPath; //"raw/".concat(assetPath);
-
-                if (call.getDouble(VOLUME) == null) {
-                    volume = 1.0;
-                } else {
-                    volume = call.getDouble(VOLUME, 0.5);
-                }
-
-                if (call.getInt(AUDIO_CHANNEL_NUM) == null) {
-                    audioChannelNum = 1;
-                } else {
-                    audioChannelNum = call.getInt(AUDIO_CHANNEL_NUM);
-                }
 
                 AssetFileDescriptor assetFileDescriptor;
                 if (isUrl) {
