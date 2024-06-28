@@ -373,7 +373,7 @@ isPlaying(options: { assetId: string; }) => Promise<{ isPlaying: boolean; }>
 ### addListener('complete', ...)
 
 ```typescript
-addListener(eventName: 'complete', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'complete', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listen for asset completed playing event
@@ -383,7 +383,7 @@ Listen for asset completed playing event
 | **`eventName`**    | <code>'complete'</code>                               |
 | **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 5.0.1
 
