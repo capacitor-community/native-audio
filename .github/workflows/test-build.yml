@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -26,3 +26,6 @@ jobs:
 
       - name: Run build
         run: yarn build
+
+      - name: Run verify
+        run: yarn verify
