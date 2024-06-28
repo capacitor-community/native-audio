@@ -26,3 +26,6 @@ jobs:
 
       - name: Run build
         run: yarn build
+
+      - name: Run verify
+        run: yarn verify
