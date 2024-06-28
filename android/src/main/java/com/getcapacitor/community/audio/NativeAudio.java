@@ -108,10 +108,10 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
     public void configure(PluginCall call) {
         initSoundPool();
 
-        this.fadeMusic = call.getBoolean(OPT_FADE_MUSIC, true);
+        this.fadeMusic = call.getBoolean(OPT_FADE_MUSIC, false);
 
         if (this.audioManager != null) {
-            if (call.getBoolean(OPT_FOCUS_AUDIO, true)) {
+            if (call.getBoolean(OPT_FOCUS_AUDIO, false)) {
                 this.audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             } else {
                 this.audioManager.abandonAudioFocus(this);

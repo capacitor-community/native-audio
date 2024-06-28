@@ -23,13 +23,14 @@ export interface NativeAudio {
 
 export interface ConfigureOptions {
   /**
-   * indicating whether or not to fade audio.
-   * @default true
+   * Indicating whether or not to fade audio.
+   * @default false
    */
   fade?: boolean;
   /**
-   * indicating whether or not to disable mixed audio.
-   * @default true */
+   * Indicating whether or not to disable mixed audio.
+   * @default false
+   */
   focus?: boolean;
 }
 
