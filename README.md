@@ -395,10 +395,10 @@ Listen for asset completed playing event
 
 #### ConfigureOptions
 
-| Prop        | Type                 | Description                                       | Default           |
-| ----------- | -------------------- | ------------------------------------------------- | ----------------- |
-| **`fade`**  | <code>boolean</code> | indicating whether or not to fade audio.          | <code>true</code> |
-| **`focus`** | <code>boolean</code> | indicating whether or not to disable mixed audio. | <code>true</code> |
+| Prop        | Type                 | Description                                       | Default            |
+| ----------- | -------------------- | ------------------------------------------------- | ------------------ |
+| **`fade`**  | <code>boolean</code> | Indicating whether or not to fade audio.          | <code>false</code> |
+| **`focus`** | <code>boolean</code> | Indicating whether or not to disable mixed audio. | <code>false</code> |
 
 
 #### PreloadOptions
