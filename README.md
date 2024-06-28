@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/maintenance/yes/2023?style=flat-square" />
+  <img src="https://img.shields.io/maintenance/yes/2024?style=flat-square" />
   <a href="https://github.com/capacitor-community/native-audio/actions?query=workflow%3A%22Test+and+Build+Plugin%22"><img src="https://img.shields.io/github/actions/workflow/status/capacitor-community/native-audio/test-build.yml?style=flat-square" /></a>
   <a href="https://www.npmjs.com/package/@capacitor-community/native-audio"><img src="https://img.shields.io/npm/l/@capacitor-community/native-audio?style=flat-square" /></a>
 <br>
@@ -20,7 +20,7 @@
 # Capacitor Native Audio Plugin
 
 Capacitor plugin for native audio engine.
-Capacitor v5 - ✅ Support!
+Capacitor v6 - ✅ Support!
 
 Click on video to see example 💥
 
@@ -32,8 +32,6 @@ Click on video to see example 💥
 | Maintainer    | GitHub                                      | Social                              |
 | ------------- | ------------------------------------------- | ----------------------------------- |
 | Maxim Bazuev  | [bazuka5801](https://github.com/bazuka5801) | [Telegram](https://t.me/bazuka5801) |
-
-Mainteinance Status: Actively Maintained
 
 ## Preparation
 All audio place in specific platform folder
