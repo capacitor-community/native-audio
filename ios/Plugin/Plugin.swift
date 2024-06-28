@@ -46,6 +46,7 @@ public class NativeAudio: CAPPlugin {
                 print("Failed to set setCategory audio")
             }
         }
+        call.resolve()
     }
 
     @objc func preload(_ call: CAPPluginCall) {
