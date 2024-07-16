@@ -108,6 +108,16 @@ public class NativeAudio: CAPPlugin {
         ])
     }
 
+    @obj func setCurrentTime(_ call: CAPPluginCall) {
+        guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
+            return
+        }
+
+        let time = call.getDouble("time") ?? 0
+        audioAsset.setCurrentTime(time: time)
+        call.resolve()
+    }
+
     @objc func getCurrentTime(_ call: CAPPluginCall) {
         guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
             return
