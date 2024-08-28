@@ -36,11 +36,11 @@ Click on video to see example 💥
 ## Preparation
 All audio place in specific platform folder
 
-Andoid: `android/app/src/assets`
+Andoid: `PROJECT_ROOT/android/app/src/assets`
 
-iOS: `ios/App/App/sounds`
+iOS: `PROJECT_ROOT/ios/App/App/sounds`
 
-Web: `assets/sounds`
+Web: `PROJECT_ROOT/public/assets/sounds`
 
 ## Installation
 
@@ -62,7 +62,7 @@ Sync native files
 npx cap sync
 ```
 
-On iOS, Android and Web, no further steps are needed.
+On iOS, Android and Web, no further steps are needed by stricly following the files location then just use the filename as *assetPath*.
 
 ## Configuration
 
@@ -109,7 +109,7 @@ import {NativeAudio} from '@capacitor-community/native-audio'
  */
 NativeAudio.preload({
     assetId: "fire",
-    assetPath: "fire.mp3",
+    assetPath: "fire.mp3",// here it is meaning the file is located under PROJECT_ROOT/public/assets/sounds/
     audioChannelNum: 1,
     isUrl: false
 });
