@@ -25,7 +25,7 @@ public class AudioDispatcher
     private int mediaState;
     private AudioAsset owner;
 
-    public AudioDispatcher(AssetFileDescriptor assetFileDescriptor, float volume) throws Exception {
+    public AudioDispatcher(AssetFileDescriptor assetFileDescriptor, float volume, int audioType) throws Exception {
         mediaState = INVALID;
 
         mediaPlayer = new MediaPlayer();
@@ -39,7 +39,7 @@ public class AudioDispatcher
         mediaPlayer.setOnSeekCompleteListener(this);
         mediaPlayer.setAudioAttributes(
             new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setUsage(audioType)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build()
         );

@@ -14,7 +14,7 @@ public class AudioAsset {
     private String assetId;
     private NativeAudio owner;
 
-    AudioAsset(NativeAudio owner, String assetId, AssetFileDescriptor assetFileDescriptor, int audioChannelNum, float volume)
+    AudioAsset(NativeAudio owner, String assetId, AssetFileDescriptor assetFileDescriptor, int audioChannelNum, float volume, int audioType)
         throws Exception {
         audioList = new ArrayList<>();
         this.owner = owner;
@@ -25,7 +25,7 @@ public class AudioAsset {
         }
 
         for (int x = 0; x < audioChannelNum; x++) {
-            AudioDispatcher audioDispatcher = new AudioDispatcher(assetFileDescriptor, volume);
+            AudioDispatcher audioDispatcher = new AudioDispatcher(assetFileDescriptor, volume, audioType);
             audioList.add(audioDispatcher);
             if (audioChannelNum == 1) audioDispatcher.setOwner(this);
         }
