@@ -56,6 +56,16 @@ public class AudioAsset {
         return 0;
     }
 
+    public void setCurrentPosition(double time) {
+        if (audioList.size() != 1) return;
+
+        AudioDispatcher audio = audioList.get(playIndex);
+
+        if (audio != null) {
+            audio.setCurrentPosition(time);
+        }
+    }
+
     public double getCurrentPosition() {
         if (audioList.size() != 1) return 0;
 

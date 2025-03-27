@@ -11,6 +11,7 @@ export interface NativeAudio {
   unload(options: { assetId: string }): Promise<void>;
   setVolume(options: { assetId: string; volume: number }): Promise<void>;
   getCurrentTime(options: { assetId: string }): Promise<{ currentTime: number }>;
+  setCurrentTime(options: { assetId: string, time: number }): Promise<void>;
   getDuration(options: { assetId: string }): Promise<{ duration: number }>;
   isPlaying(options: { assetId: string }): Promise<{ isPlaying: boolean }>;
   /**
