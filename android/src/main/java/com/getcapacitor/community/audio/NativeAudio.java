@@ -376,8 +376,10 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                     assetFileDescriptor = new AssetFileDescriptor(p, 0, -1);
                 } else {
                     if (fullPath.startsWith("content")) {
-                        assetFileDescriptor =
-                            getBridge().getActivity().getContentResolver().openAssetFileDescriptor(Uri.parse(fullPath), "r");
+                        assetFileDescriptor = getBridge()
+                            .getActivity()
+                            .getContentResolver()
+                            .openAssetFileDescriptor(Uri.parse(fullPath), "r");
                     } else {
                         Context ctx = getBridge().getActivity().getApplicationContext();
                         AssetManager am = ctx.getResources().getAssets();
@@ -410,13 +412,10 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                 if (LOOP.equals(action) && asset != null) {
                     asset.loop();
                 } else if (asset != null) {
-                    asset.play(
-                        time,
-                        () -> {
-                            call.resolve();
-                            return null;
-                        }
-                    );
+                    asset.play(time, () -> {
+                        call.resolve();
+                        return null;
+                    });
                 }
             }
         } catch (Exception ex) {
