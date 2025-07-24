@@ -55,6 +55,12 @@ public class AudioDispatcher
         return mediaPlayer.getDuration() / 1000.0;
     }
 
+    public void setCurrentPosition(double time) {
+        if (mediaState == PLAYING || mediaState == PAUSE) {
+            mediaPlayer.seekTo((int) (time * 1000));
+        }
+    }
+
     public double getCurrentPosition() {
         return mediaPlayer.getCurrentPosition() / 1000.0;
     }
