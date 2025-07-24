@@ -24,8 +24,11 @@ public class NativeAudio: CAPPlugin {
         self.fadeMusic = false
 
         do {
+            let currentSessionCategory = self.session.category
+            if(currentSessionCategory == .record ) {
             try self.session.setCategory(AVAudioSession.Category.playback)
             try self.session.setActive(false)
+            }
         } catch {
             print("Failed to set session category")
         }
