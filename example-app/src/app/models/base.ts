@@ -1,0 +1,7 @@
+export enum FILE_OPENER_PLUGIN_ERRORS {
+    INTERNAL_ERROR = '1',
+    INVALID_ARGUMENT = '2',
+    FILE_NOT_SUPPORTED = '8',
+    FILE_NOT_FOUND = '9',
+    UNKNOWN = '10'
+}
