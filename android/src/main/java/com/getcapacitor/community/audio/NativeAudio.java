@@ -127,7 +127,9 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
 
     @PluginMethod
     public void play(final PluginCall call) {
-        getBridge().getActivity().runOnUiThread(() -> playOrLoop("play", call));
+        getBridge()
+            .getActivity()
+            .runOnUiThread(() -> playOrLoop("play", call));
     }
 
     @PluginMethod
@@ -182,7 +184,9 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
 
     @PluginMethod
     public void loop(final PluginCall call) {
-        getBridge().getActivity().runOnUiThread(() -> playOrLoop("loop", call));
+        getBridge()
+            .getActivity()
+            .runOnUiThread(() -> playOrLoop("loop", call));
     }
 
     @PluginMethod
