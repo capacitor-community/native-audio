@@ -219,9 +219,13 @@ NativeAudio.isPlaying({
 configure(options: ConfigureOptions) => Promise<void>
 ```
 
-| Param         | Type                                                          |
-| ------------- | ------------------------------------------------------------- |
-| **`options`** | <code><a href="#configureoptions">ConfigureOptions</a></code> |
+Configure plugin behavior for audio focus and fading
+
+| Param         | Type                                                          | Description           |
+| ------------- | ------------------------------------------------------------- | --------------------- |
+| **`options`** | <code><a href="#configureoptions">ConfigureOptions</a></code> | Configuration options |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -400,19 +404,10 @@ Listen for asset completed playing event
 
 #### ConfigureOptions
 
-| Prop                 | Type                                                              | Description                   | Default                        |
-| -------------------- | ----------------------------------------------------------------- | ----------------------------- | ------------------------------ |
-| **`fade`**           | <code>boolean</code>                                              | Audio fade configuration       | <code>false</code>             |
-| **`audioFocusMode`** | <code><a href="#audiofocusmode">AudioFocusMode</a></code>        | Audio focus behavior mode     | <code>AudioFocusMode.NONE</code> |
-
-
-#### AudioFocusMode
-
-| Members        | Value            | Description                                           |
-| -------------- | ---------------- | ----------------------------------------------------- |
-| **`NONE`**     | <code>'none'</code>      | Allow mixed audio, no focus management                |
-| **`EXCLUSIVE`** | <code>'exclusive'</code> | Take exclusive audio focus, pause other audio        |
-| **`DUCK`**     | <code>'duck'</code>      | Take audio focus but duck (lower volume) other audio |
+| Prop                 | Type                                                      | Description               | Default                          |
+| -------------------- | --------------------------------------------------------- | ------------------------- | -------------------------------- |
+| **`fade`**           | <code>boolean</code>                                      | Audio fade configuration  | <code>false</code>               |
+| **`audioFocusMode`** | <code><a href="#audiofocusmode">AudioFocusMode</a></code> | Audio focus behavior mode | <code>AudioFocusMode.NONE</code> |
 
 
 #### PreloadOptions
@@ -431,5 +426,17 @@ Listen for asset completed playing event
 | Prop         | Type                                      |
 | ------------ | ----------------------------------------- |
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+
+
+### Enums
+
+
+#### AudioFocusMode
+
+| Members         | Value                    | Description                                          |
+| --------------- | ------------------------ | ---------------------------------------------------- |
+| **`NONE`**      | <code>'none'</code>      | Allow mixed audio, no focus management               |
+| **`EXCLUSIVE`** | <code>'exclusive'</code> | Take exclusive audio focus, pause other audio        |
+| **`DUCK`**      | <code>'duck'</code>      | Take audio focus but duck (lower volume) other audio |
 
 </docgen-api>
