@@ -1,6 +1,36 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 
+export enum AudioFocusMode {
+  /** Allow mixed audio, no focus management */
+  NONE = 'none',
+  /** Take exclusive audio focus, pause other audio */
+  EXCLUSIVE = 'exclusive',
+  /** Take audio focus but duck (lower volume) other audio */
+  DUCK = 'duck'
+}
+
 export interface NativeAudio {
+  /**
+   * Configure plugin behavior for audio focus and fading
+   *
+   * @param options Configuration options
+   *
+   * @example
+   * ```typescript
+   * // Duck other audio when playing
+   * await NativeAudio.configure({
+   *   audioFocusMode: AudioFocusMode.DUCK
+   * });
+   *
+   * // Take exclusive focus with fade effect
+   * await NativeAudio.configure({
+   *   fade: true,
+   *   audioFocusMode: AudioFocusMode.EXCLUSIVE
+   * });
+   * ```
+   *
+   * @since 1.0.0
+   */
   configure(options: ConfigureOptions): Promise<void>;
   preload(options: PreloadOptions): Promise<void>;
   play(options: { assetId: string; time?: number }): Promise<void>;
@@ -23,15 +53,16 @@ export interface NativeAudio {
 
 export interface ConfigureOptions {
   /**
-   * Indicating whether or not to fade audio.
+   * Audio fade configuration
    * @default false
    */
   fade?: boolean;
+
   /**
-   * Indicating whether or not to disable mixed audio.
-   * @default false
+   * Audio focus behavior mode
+   * @default AudioFocusMode.NONE
    */
-  focus?: boolean;
+  audioFocusMode?: AudioFocusMode;
 }
 
 export interface PreloadOptions {
