@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Native Audio Demo App
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Native Audio Demo App</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Status</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Last Action:</strong> {{ status }}</p>
+      <p><strong>Duration:</strong> {{ duration | number:'1.2-2' }}s</p>
+      <p><strong>Current Time:</strong> {{ currentTime | number:'1.2-2' }}s</p>
+      <p><strong>Is Playing:</strong> {{ playingStatus }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Note: For this to work, you must place an audio file at 'src/assets/sounds/fire.mp3' -->
+  <ion-button (click)="preload()" expand="block">1. Preload 'fire.mp3'</ion-button>
+  <ion-button (click)="play()" expand="block" color="success">2. Play</ion-button>
+  <ion-button (click)="loop()" expand="block" color="secondary">Loop</ion-button>
+  <ion-button (click)="getDuration()" expand="block" color="tertiary">Get Duration</ion-button>
+  <ion-button (click)="getCurrentTime()" expand="block" color="tertiary">Get Current Time</ion-button>
+  <ion-button (click)="isPlaying()" expand="block" color="tertiary">Is Playing?</ion-button>
+  <ion-button (click)="setVolume()" expand="block" color="medium">Set Volume to 0.5</ion-button>
+  <ion-button (click)="stop()" expand="block" color="warning">3. Stop</ion-button>
+  <ion-button (click)="unload()" expand="block" color="danger">4. Unload</ion-button>
+
+</ion-content>

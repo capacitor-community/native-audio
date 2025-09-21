@@ -89,6 +89,8 @@ No configuration required for this plugin.
 ## Usage
 
 [Example repository](https://github.com/bazuka5801/native-audio-example)
+OR
+another complete Ionic/Angular application demonstrating every plugin method is available in the **example-app** directory
 
 ```typescript
 import {NativeAudio} from '@capacitor-community/native-audio'

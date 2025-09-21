@@ -1,0 +1,51 @@
+// Styles from original component
+ion-button {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+ion-card-content p {
+  font-size: 1rem;
+  margin: 8px 0;
+  word-wrap: break-word;
+}
+
+
+// Styles from your prompt
+// :host {
+//   ion-content {
+//     ion-toolbar {
+//       &.button-toolbar {
+//         padding: 0 12px;
+
+//         ion-buttons {
+//           display: flex;
+//           ion-button {
+//             flex: 50% 1 1;
+//           }
+//         }
+//       }
+//     }
+
+//     div {
+//       &.title {
+//         font-weight: 600;
+//         text-align: center;
+//         padding-top: 12px;
+//         padding-bottom: 6px;
+//       }
+//       &.image-container {
+//         display: flex;
+//         img {
+//           margin: 0 auto;
+//         }
+//       }
+//     }
+
+//     ion-label {
+//       &.info-details {
+//         text-align: center;
+//       }
+//     }
+//   }
+// }
