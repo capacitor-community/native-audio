@@ -8,7 +8,7 @@
 
 public class Constant {
     public static let FadeKey = "fade"
-    public static let FocusAudio = "focus"
+    public static let AudioFocusModeKey = "audioFocusMode"
     public static let AssetPathKey = "assetPath"
     public static let AssetIdKey = "assetId"
     public static let Volume = "volume"
