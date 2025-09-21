@@ -283,6 +283,11 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                         asset.unload();
                         audioAssetList.remove(audioId);
 
+                        // Abandon audio focus when no more assets are loaded
+                        if (audioAssetList.isEmpty()) {
+                            this.audioManager.abandonAudioFocus(this);
+                        }
+
                         status = new JSObject();
                         status.put("status", "OK");
                         call.resolve(status);

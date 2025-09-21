@@ -67,6 +67,15 @@ public class NativeAudio: CAPPlugin, CAPBridgedPlugin {
         call.resolve()
     }
 
+
+    private func deactivateAudioSession() {
+        do {
+            try self.session.setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("Failed to deactivate audio session")
+        }
+    }
+
     @objc func preload(_ call: CAPPluginCall) {
         preloadAsset(call, isComplex: true)
     }
@@ -185,7 +194,10 @@ public class NativeAudio: CAPPlugin, CAPBridgedPlugin {
             if asset != nil && asset is AudioAsset {
                 let audioAsset = asset as! AudioAsset
                 audioAsset.unload()
-                self.audioList[audioId] = nil
+                self.audioList.removeValue(forKey: audioId);
+                if self.audioList.isEmpty {
+                    self.deactivateAudioSession()
+                }
             }
         }
         call.resolve()
