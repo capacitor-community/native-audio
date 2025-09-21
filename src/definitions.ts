@@ -6,7 +6,7 @@ export enum AudioFocusMode {
   /** Take exclusive audio focus, pause other audio */
   EXCLUSIVE = 'exclusive',
   /** Take audio focus but duck (lower volume) other audio */
-  DUCK = 'duck'
+  DUCK = 'duck',
 }
 
 export interface NativeAudio {

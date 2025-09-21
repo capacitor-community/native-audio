@@ -9,8 +9,8 @@ import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_ASSET_MISSIN
 import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_EXISTS;
 import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_ID_MISSING;
 import static com.getcapacitor.community.audio.Constant.LOOP;
-import static com.getcapacitor.community.audio.Constant.OPT_FADE_MUSIC;
 import static com.getcapacitor.community.audio.Constant.OPT_AUDIO_FOCUS_MODE;
+import static com.getcapacitor.community.audio.Constant.OPT_FADE_MUSIC;
 import static com.getcapacitor.community.audio.Constant.VOLUME;
 
 import android.Manifest;
@@ -117,15 +117,15 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
             switch (audioFocusMode) {
                 case NONE:
                     this.audioManager.abandonAudioFocus(this);
-                    
+
                     break;
                 case EXCLUSIVE:
                     this.audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-                    
+
                     break;
                 case DUCK:
                     this.audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
-                    
+
                     break;
             }
         }

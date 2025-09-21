@@ -25,7 +25,7 @@ public enum AudioFocusMode {
                 return mode;
             }
         }
-        
+
         return NONE;
     }
 }
