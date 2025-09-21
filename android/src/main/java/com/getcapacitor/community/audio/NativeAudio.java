@@ -10,7 +10,7 @@ import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_EXISTS;
 import static com.getcapacitor.community.audio.Constant.ERROR_AUDIO_ID_MISSING;
 import static com.getcapacitor.community.audio.Constant.LOOP;
 import static com.getcapacitor.community.audio.Constant.OPT_FADE_MUSIC;
-import static com.getcapacitor.community.audio.Constant.OPT_FOCUS_AUDIO;
+import static com.getcapacitor.community.audio.Constant.OPT_AUDIO_FOCUS_MODE;
 import static com.getcapacitor.community.audio.Constant.VOLUME;
 
 import android.Manifest;
@@ -111,10 +111,22 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
         this.fadeMusic = call.getBoolean(OPT_FADE_MUSIC, false);
 
         if (this.audioManager != null) {
-            if (call.getBoolean(OPT_FOCUS_AUDIO, false)) {
-                this.audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-            } else {
-                this.audioManager.abandonAudioFocus(this);
+            String audioFocusModeString = call.getString(OPT_AUDIO_FOCUS_MODE, AudioFocusMode.NONE.getValue());
+            AudioFocusMode audioFocusMode = AudioFocusMode.fromString(audioFocusModeString);
+
+            switch (audioFocusMode) {
+                case NONE:
+                    this.audioManager.abandonAudioFocus(this);
+                    
+                    break;
+                case EXCLUSIVE:
+                    this.audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                    
+                    break;
+                case DUCK:
+                    this.audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+                    
+                    break;
             }
         }
         call.resolve();

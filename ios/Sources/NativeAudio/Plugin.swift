@@ -49,11 +49,17 @@ public class NativeAudio: CAPPlugin, CAPBridgedPlugin {
 
     @objc func configure(_ call: CAPPluginCall) {
         self.fadeMusic = call.getBool(Constant.FadeKey, false)
+        let audioFocusModeString = call.getString(Constant.AudioFocusModeKey, AudioFocusMode.none.rawValue)
+        let audioFocusMode = AudioFocusMode(rawValue: audioFocusModeString) ?? AudioFocusMode.none
+
         do {
-            if call.getBool(Constant.FocusAudio, false) {
-                try self.session.setCategory(AVAudioSession.Category.playback)
-            } else {
+            switch audioFocusMode {
+            case .none:
                 try self.session.setCategory(AVAudioSession.Category.ambient)
+            case .exclusive:
+                try self.session.setCategory(AVAudioSession.Category.playback)
+            case .duck:
+                try self.session.setCategory(AVAudioSession.Category.playback, options: .duckOthers)
             }
         } catch {
             print("Failed to set setCategory audio")
