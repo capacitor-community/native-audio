@@ -40,4 +40,5 @@ export interface PreloadOptions {
   volume?: number;
   audioChannelNum?: number;
   isUrl?: boolean;
+  audioType?: number;
 }
