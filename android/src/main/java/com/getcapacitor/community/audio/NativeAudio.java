@@ -17,6 +17,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
@@ -47,6 +49,8 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
     private static ArrayList<AudioAsset> resumeList;
     private boolean fadeMusic = false;
     private AudioManager audioManager;
+    private AudioFocusRequest audioFocusRequest;
+    private AudioFocusMode configuredAudioFocusMode = AudioFocusMode.NONE;
 
     @Override
     public void load() {
@@ -110,25 +114,10 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
 
         this.fadeMusic = call.getBoolean(OPT_FADE_MUSIC, false);
 
-        if (this.audioManager != null) {
-            String audioFocusModeString = call.getString(OPT_AUDIO_FOCUS_MODE, AudioFocusMode.NONE.getValue());
-            AudioFocusMode audioFocusMode = AudioFocusMode.fromString(audioFocusModeString);
+        // Store the audio focus mode configuration for later use
+        String audioFocusModeString = call.getString(OPT_AUDIO_FOCUS_MODE, AudioFocusMode.NONE.getValue());
+        this.configuredAudioFocusMode = AudioFocusMode.fromString(audioFocusModeString);
 
-            switch (audioFocusMode) {
-                case NONE:
-                    this.audioManager.abandonAudioFocus(this);
-
-                    break;
-                case EXCLUSIVE:
-                    this.audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-
-                    break;
-                case DUCK:
-                    this.audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
-
-                    break;
-            }
-        }
         call.resolve();
     }
 
@@ -285,7 +274,7 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
 
                         // Abandon audio focus when no more assets are loaded
                         if (audioAssetList.isEmpty()) {
-                            this.audioManager.abandonAudioFocus(this);
+                            abandonAudioFocus();
                         }
 
                         status = new JSObject();
@@ -411,6 +400,11 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                 AudioAsset asset = new AudioAsset(this, audioId, assetFileDescriptor, audioChannelNum, (float) volume);
                 audioAssetList.put(audioId, asset);
 
+                // Request audio focus when first asset is preloaded
+                if (audioAssetList.size() == 1) {
+                    requestAudioFocus();
+                }
+
                 JSObject status = new JSObject();
                 status.put("STATUS", "OK");
                 call.resolve(status);
@@ -456,5 +450,54 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
 
     private boolean isStringValid(String value) {
         return (value != null && !value.isEmpty() && !value.equals("null"));
+    }
+
+    private void requestAudioFocus() {
+        if (this.audioManager == null) {
+            return;
+        }
+
+        int focusGain;
+        int usage;
+        int contentType;
+
+        switch (this.configuredAudioFocusMode) {
+            case EXCLUSIVE:
+                focusGain = AudioManager.AUDIOFOCUS_GAIN;
+                usage = AudioAttributes.USAGE_MEDIA;
+                contentType = AudioAttributes.CONTENT_TYPE_MUSIC;
+                break;
+            case DUCK:
+                focusGain = AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK;
+                usage = AudioAttributes.USAGE_ASSISTANCE_SONIFICATION;
+                contentType = AudioAttributes.CONTENT_TYPE_SONIFICATION;
+                break;
+            case NONE:
+                return;
+        }
+
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+            .setUsage(usage)
+            .setContentType(contentType)
+            .build();
+
+        this.audioFocusRequest = new AudioFocusRequest.Builder(focusGain)
+            .setAudioAttributes(audioAttributes)
+            .setOnAudioFocusChangeListener(this)
+            .setAcceptsDelayedFocusGain(false)
+            .setWillPauseWhenDucked(false)
+            .build();
+
+        int result = this.audioManager.requestAudioFocus(this.audioFocusRequest);
+        if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            Log.w(TAG, "Audio focus request denied");
+        }
+    }
+
+    private void abandonAudioFocus() {
+        if (this.audioFocusRequest != null) {
+            this.audioManager.abandonAudioFocusRequest(this.audioFocusRequest);
+            this.audioFocusRequest = null;
+        }
     }
 }
