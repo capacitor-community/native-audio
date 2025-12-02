@@ -474,6 +474,8 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                 break;
             case NONE:
                 return;
+            default:
+                return;
         }
 
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
