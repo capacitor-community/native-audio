@@ -2,12 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [v7.0.1](https://github.com/capacitor-community/native-audio/compare/v7.0.0...v7.0.1) (2025-09-21)
+## [8.0.0](https://github.com/capacitor-community/native-audio/compare/v7.0.1...v8.0.0) (2025-12-30)
 
-### Enhancements
 
-- support for spm ([#133](https://github.com/capacitor-community/native-audio/pull/133)), ([bd3c048](https://github.com/capacitor-community/native-audio/commit/bd3c04823175d5c1b61ae6c0b678c63f605dce86)), closes [#122](https://github.com/capacitor-community/native-audio/issues/122)
-- added an Ionic/Angular example application in the **example-app** directory. On iOS, the example app uses Swift Package Manager instead of CocoaPods for its native iOS dependencies
+### ⚠ BREAKING CHANGES
+
+* support Capacitor 8 (#144)
+
+### Features
+
+* support Capacitor 8 ([#144](https://github.com/capacitor-community/native-audio/issues/144)) ([7348f48](https://github.com/capacitor-community/native-audio/commit/7348f489193c07380431683723da23efc63ab670))
 
 ## [7.0.0](https://github.com/capacitor-community/native-audio/compare/v0.1.2...v7.0.0) (2025-03-27)
 
