@@ -72,3 +72,5 @@ DerivedData/
 Podfile.lock
 Package.resolved
 /.build
+/CLAUDE.md
+/.claude

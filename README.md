@@ -93,8 +93,18 @@ OR
 another complete Ionic/Angular application demonstrating every plugin method is available in the **example-app** directory
 
 ```typescript
-import {NativeAudio} from '@capacitor-community/native-audio'
+import { NativeAudio, AudioFocusMode } from '@capacitor-community/native-audio'
 
+/**
+ * This method will configure the audio focus behavior and fading.
+ * @param fade - enable audio fade effect
+ * @param audioFocusMode - audio focus mode: NONE (mixed audio), EXCLUSIVE (pause other audio), DUCK (lower other audio volume)
+ * @returns void
+ */
+NativeAudio.configure({
+    fade: false,
+    audioFocusMode: AudioFocusMode.DUCK
+});
 
 /**
  * This method will load more optimized audio files for background into memory.
@@ -209,9 +219,13 @@ NativeAudio.isPlaying({
 configure(options: ConfigureOptions) => Promise<void>
 ```
 
-| Param         | Type                                                          |
-| ------------- | ------------------------------------------------------------- |
-| **`options`** | <code><a href="#configureoptions">ConfigureOptions</a></code> |
+Configure plugin behavior for audio focus and fading
+
+| Param         | Type                                                          | Description           |
+| ------------- | ------------------------------------------------------------- | --------------------- |
+| **`options`** | <code><a href="#configureoptions">ConfigureOptions</a></code> | Configuration options |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -390,10 +404,10 @@ Listen for asset completed playing event
 
 #### ConfigureOptions
 
-| Prop        | Type                 | Description                                       | Default            |
-| ----------- | -------------------- | ------------------------------------------------- | ------------------ |
-| **`fade`**  | <code>boolean</code> | Indicating whether or not to fade audio.          | <code>false</code> |
-| **`focus`** | <code>boolean</code> | Indicating whether or not to disable mixed audio. | <code>false</code> |
+| Prop                 | Type                                                      | Description               | Default                          |
+| -------------------- | --------------------------------------------------------- | ------------------------- | -------------------------------- |
+| **`fade`**           | <code>boolean</code>                                      | Audio fade configuration  | <code>false</code>               |
+| **`audioFocusMode`** | <code><a href="#audiofocusmode">AudioFocusMode</a></code> | Audio focus behavior mode | <code>AudioFocusMode.NONE</code> |
 
 
 #### PreloadOptions
@@ -412,5 +426,17 @@ Listen for asset completed playing event
 | Prop         | Type                                      |
 | ------------ | ----------------------------------------- |
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+
+
+### Enums
+
+
+#### AudioFocusMode
+
+| Members         | Value                    | Description                                          |
+| --------------- | ------------------------ | ---------------------------------------------------- |
+| **`NONE`**      | <code>'none'</code>      | Allow mixed audio, no focus management               |
+| **`EXCLUSIVE`** | <code>'exclusive'</code> | Take exclusive audio focus, pause other audio        |
+| **`DUCK`**      | <code>'duck'</code>      | Take audio focus but duck (lower volume) other audio |
 
 </docgen-api>
