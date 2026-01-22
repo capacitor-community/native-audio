@@ -391,7 +391,11 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                     }
                 }
 
-                AudioAsset asset = new AudioAsset(this, audioId, assetFileDescriptor, audioChannelNum, (float) volume);
+                Integer audioType = call.getInt("audioType");
+                if(audioType == null) {
+                    audioType = 1; // Default to USAGE_MEDIA
+                }
+                AudioAsset asset = new AudioAsset(this, audioId, assetFileDescriptor, audioChannelNum, (float) volume, audioType);
                 audioAssetList.put(audioId, asset);
 
                 JSObject status = new JSObject();
